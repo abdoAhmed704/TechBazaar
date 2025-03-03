@@ -12,7 +12,7 @@ namespace TechBazaar.Models
         public string UserId { get; set; }
 
         [Required]
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         [Required]
         public DateTime ModifiedAt { get; set; }

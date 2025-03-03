@@ -15,7 +15,7 @@ namespace TechBazaar.Models
         [StringLength(500)]
         public string Desc { get; set; }
 
-        public ICollection<Product> Products { get; set; } = new List<Product>();
+
         public ICollection<SubCategory> SubCategories { get; set; } = new List<SubCategory>();
     }
 }

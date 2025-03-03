@@ -26,7 +26,7 @@ namespace TechBazaar.Models
 
         [Required]
         [DataType(DataType.DateTime)]
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         [Required]
         [DataType(DataType.DateTime)]

@@ -9,9 +9,7 @@ namespace TechBazaar.Models
 
         [Required]
         [StringLength(50)]
-        public string Name { get; set; } // Assuming 'int' was a typo in schema
-
-        // Navigation property
+        public string Name { get; set; }
         public ICollection<Payment> Payments { get; set; } = new List<Payment>();
     }
 }
