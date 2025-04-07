@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using TechBazaar.Models;
+using TechBazaar.Core;
 
 namespace TechBazaar.Controllers
 {

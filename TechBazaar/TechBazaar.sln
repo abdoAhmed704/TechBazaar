@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechBazaar", "TechBazaar\TechBazaar.csproj", "{FE6D3A02-EB23-4B56-B9F5-FCB57562EA98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechBazaar", "TechBazaar\TechBazaar.csproj", "{FE6D3A02-EB23-4B56-B9F5-FCB57562EA98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechBazaar.Core", "TechBazaar.Core\TechBazaar.Core.csproj", "{2D3024C6-6AA2-43FD-A521-E3461C924189}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechBazaar.Ef", "TechBazaar.Ef\TechBazaar.Ef.csproj", "{706AB82C-0687-430F-9523-62848E27F5A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{FE6D3A02-EB23-4B56-B9F5-FCB57562EA98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE6D3A02-EB23-4B56-B9F5-FCB57562EA98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE6D3A02-EB23-4B56-B9F5-FCB57562EA98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D3024C6-6AA2-43FD-A521-E3461C924189}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D3024C6-6AA2-43FD-A521-E3461C924189}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D3024C6-6AA2-43FD-A521-E3461C924189}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D3024C6-6AA2-43FD-A521-E3461C924189}.Release|Any CPU.Build.0 = Release|Any CPU
+		{706AB82C-0687-430F-9523-62848E27F5A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{706AB82C-0687-430F-9523-62848E27F5A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{706AB82C-0687-430F-9523-62848E27F5A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{706AB82C-0687-430F-9523-62848E27F5A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

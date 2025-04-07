@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TechBazaar.Models;
-using TechBazaar.Repository.Base;
+using TechBazaar.Core.Models;
+using TechBazaar.Core.Interfaces;
 
-namespace TechBazaar.Controllers
+namespace TechBazaar.Core.Controllers
 {
     public class TestController : Controller
     {
