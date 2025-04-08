@@ -8,8 +8,6 @@ namespace TechBazaar.Ef
     {
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductCategory> ProductCategory { get; set; }
-        public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Inventory> ProductInventories { get; set; }
         public DbSet<Discount> ProductDiscounts { get; set; }

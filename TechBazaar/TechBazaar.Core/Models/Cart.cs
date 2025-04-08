@@ -27,5 +27,12 @@ namespace TechBazaar.Core.Models
 
         public ApplicationUser? ApplicationUser { get; set; }
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+
+        public decimal TotalPrice()
+        {
+            decimal total = 0;
+            total = CartItems.Sum(item => item.TotalPrice());
+            return total;
+        }
     }
 }

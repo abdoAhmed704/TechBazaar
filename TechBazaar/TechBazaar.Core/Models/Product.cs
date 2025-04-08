@@ -17,11 +17,10 @@ namespace TechBazaar.Core.Models
         public string Desc { get; set; }
 
         [Required]
-        [StringLength(50)]
-        public string SKU { get; set; }
-
-        [Required]
         public decimal Price { get; set; }
+
+        [ForeignKey("Category")]
+        public int CategoryId { get; set; }
 
         [Required]
         [DataType(DataType.DateTime)]
@@ -40,7 +39,7 @@ namespace TechBazaar.Core.Models
         public ICollection<Review> Reviews { get; set; }
         public ICollection<Image> Images { get; set; }
 
-        public ICollection<ProductCategory> ProductCategories { get; set; }
+        public Category Category { get; set; }
         public ICollection<ProductDiscount> ProductDiscounts { get; set; }
     }
 }

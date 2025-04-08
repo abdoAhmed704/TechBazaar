@@ -22,5 +22,10 @@ namespace TechBazaar.Core.Models
 
         public Cart? Cart { get; set; }
         public Product Product { get; set; }
+
+        public decimal TotalPrice()
+        {
+            return Price * Quantity;
+        }
     }
 }

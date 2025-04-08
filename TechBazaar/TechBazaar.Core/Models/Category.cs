@@ -16,6 +16,6 @@ namespace TechBazaar.Core.Models
         public string Desc { get; set; }
 
 
-        public ICollection<SubCategory> SubCategories { get; set; } = new List<SubCategory>();
+        public ICollection<Product> Products { get; set; }
     }
 }

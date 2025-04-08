@@ -22,6 +22,7 @@ namespace TechBazaar.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(UserRegisterModelView user)
         {
             // Check if the model is valid
@@ -65,6 +66,7 @@ namespace TechBazaar.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(UserLogInModelView user)
         {
             if (!ModelState.IsValid) return View(user);

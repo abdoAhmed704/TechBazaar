@@ -18,8 +18,6 @@ namespace TechBazaar.Core.Models
 
         public string ImageUrl { get; set; }
 
-        public bool IsMain { get; set; }
-
         public Product Product { get; set; }
     }
 }

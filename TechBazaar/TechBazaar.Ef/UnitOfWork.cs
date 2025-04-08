@@ -11,10 +11,13 @@ namespace TechBazaar.Ef
 
         public IBaseRepository<Category> Category { get; private set; }
 
+        public IBaseRepository<Product> Product { get; private set; }
+
         public UnitOfWork(EContext eContext)
         {
             this.eContext = eContext;
             Category = new BaseRepository<Category>(eContext);
+            Product = new BaseRepository<Product>(eContext);
         }
 
 
@@ -23,7 +26,10 @@ namespace TechBazaar.Ef
         {
             eContext.SaveChanges();
         }
-
+        public async Task SaveChangesAsync()
+        {
+            await eContext.SaveChangesAsync();
+        }
         public void Dispose()
         {
             eContext.Dispose();

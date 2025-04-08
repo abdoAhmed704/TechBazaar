@@ -17,10 +17,12 @@ namespace TechBazaar.Core.Interfaces
         T FirstOrDefault(Expression<Func<T, bool>> selector);
         Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> selector);
         // Asynchronous methods
+
         Task<T> FindAsync(int id);
         Task<IEnumerable<T>> GetAllAsync();
         Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> match);
         void AddAsync(T entity);
+        Task<List<T>> ToListAsync(IQueryable<T> query);
 
     }
 }

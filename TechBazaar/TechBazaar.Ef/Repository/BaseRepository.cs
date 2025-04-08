@@ -91,6 +91,10 @@ namespace TechBazaar.Ef.Repository
             }
             return query;
         }
+        public async Task<List<T>> ToListAsync(IQueryable<T> query)
+        {
+            return await query.ToListAsync();
+        }
 
         public IEnumerable<Result> Select<Result>(Expression<Func<T, Result>> selector)
         {

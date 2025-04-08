@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Product>
+
+<h2>Products</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Images</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Price.ToString("C")</td>
+                <td>@product.Category.Name</td>
+                <td>
+                    @if (product.Images != null && product.Images.Any())
+                    {
+                        <img src="@product.Images.First().ImageUrl" alt="@product.Name" style="max-width: 100px;" />
+                        @if (product.Images.Count > 1)
+                        {
+                            <span>(+@(product.Images.Count - 1) more)</span>
+                        }
+                    }
+                    else
+                    {
+                        <span>No images</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-primary btn-sm">Edit</a>
+                    <form id="deleteForm_@product.Id" asp-action="Delete" asp-route-id="@product.Id" method="post" style="display:inline;">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(@product.Id, '@product.Name')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        function confirmDelete(productId, productName) {
+            if (confirm(`Are you sure you want to delete ${productName}? This will also delete all associated images.`)) {
+                document.getElementById(`deleteForm_${productId}`).submit();
+            }
+        }
+    </script>
+}
