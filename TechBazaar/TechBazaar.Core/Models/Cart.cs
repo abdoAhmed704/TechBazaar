@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using TechBazaar.Core.Enums;
 
 namespace TechBazaar.Core.Models
 {
@@ -13,6 +14,9 @@ namespace TechBazaar.Core.Models
 
         [Required]
         public decimal Total { get; set; }
+
+        [Required]
+        public CartStatus Status { get; set; }
 
         [Required]
         [DataType(DataType.DateTime)]

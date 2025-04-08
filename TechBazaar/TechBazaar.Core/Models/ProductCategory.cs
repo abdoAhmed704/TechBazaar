@@ -6,6 +6,8 @@ namespace TechBazaar.Core.Models
     public class ProductCategory
     {
         [Key]
+        public int Id { get; set; }
+
         [ForeignKey("Product")]
         public int ProductId { get; set; }
 

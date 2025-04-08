@@ -3,7 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TechBazaar.Core.Models
 {
-    public class ProductInventory
+    public class Inventory
+
     {
         [Key]
         public int Id { get; set; }

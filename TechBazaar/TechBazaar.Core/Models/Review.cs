@@ -14,9 +14,6 @@ namespace TechBazaar.Core.Models
         [ForeignKey("Product")]
         public int ProductId { get; set; }
 
-        [ForeignKey("Order")]
-        public int OrderId { get; set; }
-
         [Required]
         public int Rating { get; set; }
 
@@ -35,6 +32,5 @@ namespace TechBazaar.Core.Models
         // Navigation properties
         public ApplicationUser? ApplicationUser { get; set; }
         public Product Product { get; set; }
-        public Order Order { get; set; }
     }
 }

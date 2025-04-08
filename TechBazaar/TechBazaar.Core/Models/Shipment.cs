@@ -8,7 +8,7 @@ namespace TechBazaar.Core.Models
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("Order")]
+        [ForeignKey("Cart")]
         public int OrderId { get; set; }
 
         [ForeignKey("ShippingProvider")]
@@ -24,7 +24,7 @@ namespace TechBazaar.Core.Models
         [DataType(DataType.DateTime)]
         public DateTime? DeliveryDate { get; set; }
 
-        public Order Order { get; set; }
+        public Cart Cart { get; set; }
         public ShippingProvider ShippingProvider { get; set; }
         public ShipmentStatus ShipmentStatus { get; set; }
     }

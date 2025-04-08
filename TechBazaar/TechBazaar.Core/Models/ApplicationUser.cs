@@ -23,10 +23,30 @@ namespace TechBazaar.Core.Models
         [Required]
         public DateTime ModifiedAt { get; set; }
 
+
+        [Required]
+        [StringLength(100)]
+        public string AddressLine1 { get; set; }
+
+        [StringLength(100)]
+        public string AddressLine2 { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string City { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string Country { get; set; }
+
+        [Required]
+        [StringLength(20)]
+        public int PostalCode { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
         // Navigation properties
-        public ICollection<UserAddress> UserAddresses { get; set; } = new List<UserAddress>();
-        public ICollection<UserPayment> UserPayments { get; set; } = new List<UserPayment>();
-        public ICollection<Order> Orders { get; set; } = new List<Order>();
         public ICollection<WishList> WishLists { get; set; } = new List<WishList>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<Cart> Carts { get; set; } = new List<Cart>();

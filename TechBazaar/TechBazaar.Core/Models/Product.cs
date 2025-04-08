@@ -23,9 +23,6 @@ namespace TechBazaar.Core.Models
         [Required]
         public decimal Price { get; set; }
 
-        [ForeignKey("ProductDiscount")]
-        public int DiscountId { get; set; }
-
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
@@ -37,12 +34,13 @@ namespace TechBazaar.Core.Models
         public DateTime? DeletedAt { get; set; }
 
 
-        public ProductDiscount ProductDiscount { get; set; }
-        public ProductInventory ProductInventory { get; set; }
-        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
-        public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
-        public ICollection<WishItem> WishItems { get; set; } = new List<WishItem>();
-        public ICollection<Review> Reviews { get; set; } = new List<Review>();
-        public ICollection<ProductCategory> ProductCategories = new List<ProductCategory>();
+        public Inventory Inventory { get; set; }
+        public ICollection<CartItem> CartItems { get; set; }
+        public ICollection<WishItem> WishItems { get; set; }
+        public ICollection<Review> Reviews { get; set; }
+        public ICollection<Image> Images { get; set; }
+
+        public ICollection<ProductCategory> ProductCategories { get; set; }
+        public ICollection<ProductDiscount> ProductDiscounts { get; set; }
     }
 }

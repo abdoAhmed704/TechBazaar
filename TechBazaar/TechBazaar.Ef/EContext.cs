@@ -2,19 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using TechBazaar.Core.Models;
 
-namespace TechBazaar.Core.Models
+namespace TechBazaar.Ef
 {
     public class EContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<UserAddress> UserAddresses { get; set; }
-        public DbSet<UserPayment> UserPayments { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategory { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<ProductInventory> ProductInventories { get; set; }
-        public DbSet<ProductDiscount> ProductDiscounts { get; set; }
+        public DbSet<Inventory> ProductInventories { get; set; }
+        public DbSet<Discount> ProductDiscounts { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
