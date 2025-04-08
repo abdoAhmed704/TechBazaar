@@ -4,18 +4,23 @@ namespace TechBazaar.Core.Interfaces
 {
     public interface IBaseRepository<T> where T : class
     {
-        T FindById(int id);
-        Task<T> FindByIdAsync(int id);
-
-        IEnumerable<T> FindAll();
-        T SelectOne(Expression<Func<T,bool>> match);
-        void Add(T item);
-        void AddRange(IEnumerable<T> items);
-        void Edit(T item);
-        void EditRange(IEnumerable<T> items);
-        void Delete(T item);
-        void DeleteRange(IEnumerable<T> items);
-        void SaveChanges();
+        // Synchronous methods
+        T Find(int id);
+        IEnumerable<T> GetAll();
+        IEnumerable<T> GetAll(Expression<Func<T, bool>> match);
+        void Add(T entity);
+        void Update(T entity);
+        void Delete(T entity);
+        IQueryable<T> Include(params Expression<Func<T, object>>[] includeProperties);
+        bool Exists(int id);
+        IEnumerable<Result> Select<Result>(Expression<Func<T, Result>> selector);
+        T FirstOrDefault(Expression<Func<T, bool>> selector);
+        Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> selector);
+        // Asynchronous methods
+        Task<T> FindAsync(int id);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> match);
+        void AddAsync(T entity);
 
     }
 }

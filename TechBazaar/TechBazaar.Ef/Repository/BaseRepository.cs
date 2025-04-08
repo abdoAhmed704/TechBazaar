@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TechBazaar.Core.Models;
 using TechBazaar.Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace TechBazaar.Ef.Repository
 {
@@ -18,59 +19,87 @@ namespace TechBazaar.Ef.Repository
             this.eContext = eContext;
         }
 
-        public void Add(T item)
+        public void Add(T entity)
         {
-            eContext.Set<T>().Add(item);
+            eContext.Set<T>().Add(entity);
         }
 
-        public void AddRange(IEnumerable<T> items)
+        public async void AddAsync(T entity)
         {
-            eContext.Set<T>().AddRange();
+            await eContext.Set<T>().AddAsync(entity);
+
         }
 
-        public void Delete(T item)
+        public void Delete(T entity)
         {
-            eContext.Set<T>().Remove(item);
+            eContext.Set<T>().Remove(entity);
         }
 
-        public void DeleteRange(IEnumerable<T> items)
+        public bool Exists(int id)
         {
-            eContext.Set<T>().RemoveRange(items);
+            return eContext.Set<T>().Find(id) is not null ? true : false;
         }
 
-        public void Edit(T item)
-        {
-            eContext.Set<T>().Update(item);
-        }
-
-        public void EditRange(IEnumerable<T> items)
-        {
-            eContext.Set<T>().UpdateRange(items);
-        }
-
-        public IEnumerable<T> FindAll()
-        {
-            return eContext.Set<T>().ToList();
-        }
-
-        public T FindById(int id)
+        public T Find(int id)
         {
             return eContext.Set<T>().Find(id);
         }
 
-        public async Task<T> FindByIdAsync(int id)
+        public async Task<T> FindAsync(int id)
         {
             return await eContext.Set<T>().FindAsync(id);
         }
 
-        public void SaveChanges()
+        public T FirstOrDefault(Expression<Func<T, bool>> selector)
         {
-            eContext.SaveChanges();
+            return eContext.Set<T>().FirstOrDefault(selector);
+        }
+        public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> selector)
+        {
+            return await eContext.Set<T>().FirstOrDefaultAsync(selector);
         }
 
-        public T SelectOne(Expression<Func<T, bool>> match)
+        public IEnumerable<T> GetAll()
         {
-            return eContext.Set<T>().SingleOrDefault(match);
+            return eContext.Set<T>().ToList();
+        }
+
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>> match)
+        {
+            return eContext.Set<T>().Where(match).ToList();
+        }
+
+        public async Task<IEnumerable<T>> GetAllAsync()
+        {
+            return await eContext.Set<T>().ToListAsync();
+        }
+
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> match)
+        {
+            return await eContext.Set<T>().Where(match).ToListAsync();
+        }
+
+        public IQueryable<T> Include(params Expression<Func<T, object>>[] includeProperties)
+        {
+            var query = eContext.Set<T>().AsQueryable();
+            if (includeProperties != null)
+            {
+                foreach (var item in includeProperties)
+                {
+                    query = query.Include(item);
+                }
+            }
+            return query;
+        }
+
+        public IEnumerable<Result> Select<Result>(Expression<Func<T, Result>> selector)
+        {
+            return eContext.Set<T>().Select(selector).ToList();
+        }
+
+        public void Update(T entity)
+        {
+            eContext.Set<T>().Update(entity);
         }
     }
 }

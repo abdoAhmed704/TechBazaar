@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using TechBazaar.Core.Models;
-using TechBazaar.Core.Repository;
-using TechBazaar.Core.Repository.Base;
+using TechBazaar.Ef;
+using TechBazaar.Core.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;

@@ -15,10 +15,10 @@ namespace TechBazaar.Core.Models
 
         [Required]
         [DataType(DataType.Password)]
-        public string ConfirmPassword { get; set; }
+        public string Password { get; set; }
 
         [Required]
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         [Required]
         public DateTime ModifiedAt { get; set; }
