@@ -6,7 +6,8 @@ namespace TechBazaar.Core.Interfaces
     {
         IBaseRepository<Category> Category { get; }
         IBaseRepository<Product> Product { get; }
-
+        public IBaseRepository<Discount> Discount { get;}
+        public IBaseRepository<ProductDiscount> ProductDiscount { get;}
         void SaveChanges();
         Task SaveChangesAsync();
 

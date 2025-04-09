@@ -12,12 +12,16 @@ namespace TechBazaar.Ef
         public IBaseRepository<Category> Category { get; private set; }
 
         public IBaseRepository<Product> Product { get; private set; }
+        public IBaseRepository<Discount> Discount { get; private set; }
+        public IBaseRepository<ProductDiscount> ProductDiscount { get; private set; }
 
         public UnitOfWork(EContext eContext)
         {
             this.eContext = eContext;
             Category = new BaseRepository<Category>(eContext);
             Product = new BaseRepository<Product>(eContext);
+            Discount = new BaseRepository<Discount>(eContext);
+            ProductDiscount = new BaseRepository<ProductDiscount>(eContext);
         }
 
 

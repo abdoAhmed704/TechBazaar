@@ -11,6 +11,7 @@ namespace TechBazaar.Core.Interfaces
         void Add(T entity);
         void Update(T entity);
         void Delete(T entity);
+        void DeleteRange(IEnumerable<T> entity);
         IQueryable<T> Include(params Expression<Func<T, object>>[] includeProperties);
         bool Exists(int id);
         IEnumerable<Result> Select<Result>(Expression<Func<T, Result>> selector);

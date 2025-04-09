@@ -105,5 +105,10 @@ namespace TechBazaar.Ef.Repository
         {
             eContext.Set<T>().Update(entity);
         }
+
+        public void DeleteRange(IEnumerable<T> entity)
+        {
+            eContext.Set<T>().RemoveRange();
+        }
     }
 }

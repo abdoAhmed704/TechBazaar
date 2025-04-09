@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TechBazaar.Ef;
 
@@ -11,9 +12,11 @@ using TechBazaar.Ef;
 namespace TechBazaar.Ef.Migrations
 {
     [DbContext(typeof(EContext))]
-    partial class EContextModelSnapshot : ModelSnapshot
+    [Migration("20250409190030_Discount")]
+    partial class Discount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

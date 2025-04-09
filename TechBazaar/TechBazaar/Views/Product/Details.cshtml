@@ -1,5 +1,8 @@
 ﻿@model Product
 
+@{
+    Layout = "_Dashboard";
+}
 <h2>Product Details</h2>
 
 <div>
@@ -33,6 +36,7 @@
         <dt class="col-sm-2">
             Images
         </dt>
+
         <dd class="col-sm-10">
             @if (Model.Images != null && Model.Images.Any())
             {

@@ -11,22 +11,22 @@ using TechBazaar.Ef;
 
 namespace TechBazaar.Controllers
 {
-    public class CategoryController : Controller
+    public class DiscountController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
 
-        public CategoryController(IUnitOfWork unitOfWork)
+        public DiscountController(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
         }
 
-        // GET: Category
+        // GET: Discounts
         public async Task<IActionResult> Index()
         {
-            return View(await unitOfWork.Category.GetAllAsync());
+            return View(await unitOfWork.Discount.GetAllAsync());
         }
 
-        // GET: Category/Details/5
+        // GET: Discounts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,39 +34,39 @@ namespace TechBazaar.Controllers
                 return NotFound();
             }
 
-            var category = await unitOfWork.Category
+            var discount = await unitOfWork.Discount
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            if (discount == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(discount);
         }
 
-        // GET: Category/Create
+        // GET: Discounts/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Category/Create
+        // POST: Discounts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Category category)
+        public async Task<IActionResult> Create(Discount discount)
         {
             if (ModelState.IsValid)
             {
-                unitOfWork.Category.Add(category);
+                unitOfWork.Discount.Add(discount);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(discount);
         }
 
-        // GET: Category/Edit/5
+        // GET: Discounts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,22 +74,22 @@ namespace TechBazaar.Controllers
                 return NotFound();
             }
 
-            var category = await unitOfWork.Category.FindAsync(id ?? 0);
-            if (category == null)
+            var discount = await unitOfWork.Discount.FindAsync(id ?? 0);
+            if (discount == null)
             {
                 return NotFound();
             }
-            return View(category);
+            return View(discount);
         }
 
-        // POST: Category/Edit/5
+        // POST: Discounts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Desc")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Type,Value,StartDate,EndDate,IsActive")] Discount discount)
         {
-            if (id != category.Id)
+            if (id != discount.Id)
             {
                 return NotFound();
             }
@@ -98,12 +98,12 @@ namespace TechBazaar.Controllers
             {
                 try
                 {
-                    unitOfWork.Category.Update(category);
+                    unitOfWork.Discount.Update(discount);
                     await unitOfWork.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryExists(category.Id))
+                    if (!DiscountExists(discount.Id))
                     {
                         return NotFound();
                     }
@@ -114,10 +114,10 @@ namespace TechBazaar.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(discount);
         }
 
-        // GET: Category/Delete/5
+        // GET: Discounts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,34 +125,34 @@ namespace TechBazaar.Controllers
                 return NotFound();
             }
 
-            var category = await unitOfWork.Category
+            var discount = await unitOfWork.Discount
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            if (discount == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(discount);
         }
 
-        // POST: Category/Delete/5
+        // POST: Discounts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await unitOfWork.Category.FindAsync(id);
-            if (category != null)
+            var discount = await unitOfWork.Discount.FindAsync(id);
+            if (discount != null)
             {
-                unitOfWork.Category.Delete(category);
+                unitOfWork.Discount.Delete(discount);
             }
 
             await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoryExists(int id)
+        private bool DiscountExists(int id)
         {
-            return unitOfWork.Category.Exists(id);
+            return unitOfWork.Discount.Exists(id);
         }
     }
 }

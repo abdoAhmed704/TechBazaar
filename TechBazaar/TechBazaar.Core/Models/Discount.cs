@@ -27,6 +27,7 @@ namespace TechBazaar.Core.Models
 
         public bool IsActive { get; set; }
 
-        public ICollection<ProductDiscount> Products { get; set; }
+        public ICollection<ProductDiscount> Products { get; set; } = new List<ProductDiscount>();
+        
     }
 }

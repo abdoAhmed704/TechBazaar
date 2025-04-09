@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using TechBazaar.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using TechBazaar.Ef;
+using Microsoft.Data.SqlClient;
+using System.Text.Json;
 
 
 namespace TechBazaar.Controllers
@@ -21,11 +23,12 @@ namespace TechBazaar.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var products = await unitOfWork.Product
-                .Include(p => p.Category)
-                .Include(p => p.Images)
-                .ToListAsync();
-            return View(products);
+
+           var products = await unitOfWork.Product
+               .Include(p => p.Category)
+               .ToListAsync();
+
+           return View(products);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -50,14 +53,23 @@ namespace TechBazaar.Controllers
 
         public IActionResult Create()
         {
+
             var viewModel = new ProductCreateViewModel
             {
-                Categories = new List<SelectListItem>
+                Categories = unitOfWork.Category
+                .Select(c => new SelectListItem
                 {
-                    new SelectListItem { Value = "1", Text = "Electronics" },
-                    new SelectListItem { Value = "2", Text = "Clothing" },
-                    new SelectListItem { Value = "3", Text = "Books" }
-                }
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                }).ToList(),
+                Discounts = unitOfWork.Discount
+                .GetAll(d => d.IsActive == true && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now)
+                .Select(d => new SelectListItem
+                {
+                    Value = d.Id.ToString(),
+                    Text = d.Name
+                }).ToList()
+
             };
             return View(viewModel);
         }
@@ -75,6 +87,19 @@ namespace TechBazaar.Controllers
                     CategoryId = model.CategoryId,
                     Images = new List<Image>()
                 };
+                // Handle discounts
+                if (model.DiscountIds != null && model.DiscountIds.Count > 0)
+                {
+                    foreach (var discountId in model.DiscountIds)
+                    {
+                        var productDiscount = new ProductDiscount
+                        {
+                            ProductId = product.Id,
+                            DiscountId = discountId
+                        };
+                        product.ProductDiscounts.Add(productDiscount);
+                    }
+                }
 
                 // Handle image uploads
                 if (model.ImageFiles != null && model.ImageFiles.Count > 0)
@@ -145,10 +170,18 @@ namespace TechBazaar.Controllers
                     {
                         Value = c.Id.ToString(),
                         Text = c.Name
+                    }).ToList(),
+                Discounts = unitOfWork.Discount
+                    .GetAll(d => d.IsActive == true && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now)
+                    .Select(d => new SelectListItem
+                    {
+                        Value = d.Id.ToString(),
+                        Text = d.Name
                     }).ToList()
             };
+            // Store existing images in TempData for use in the view
 
-
+            TempData["ExistingImages"] = JsonSerializer.Serialize(product.Images.Select(i => new { i.Id, i.ImageUrl }).ToList());
             return View(viewModel);
         }
 
@@ -174,6 +207,19 @@ namespace TechBazaar.Controllers
                     product.Description = model.Description;
                     product.Price = model.Price;
                     product.CategoryId = model.CategoryId;
+
+                    // Handle discounts
+                    var currentDicounts = unitOfWork.ProductDiscount.GetAll(p => p.ProductId == product.Id).ToList();
+                    unitOfWork.ProductDiscount.DeleteRange(currentDicounts);
+
+                    foreach (var discountId in model.DiscountIds)
+                    {
+                        var discount = new ProductDiscount
+                        {
+                            ProductId = product.Id,
+                            DiscountId = discountId
+                        };
+                    }
 
                     // Handle new image uploads
                     if (model.ImageFiles != null && model.ImageFiles.Count > 0)
