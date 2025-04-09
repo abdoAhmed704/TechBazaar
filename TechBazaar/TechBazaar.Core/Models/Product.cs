@@ -14,7 +14,7 @@ namespace TechBazaar.Core.Models
 
         [Required]
         [StringLength(500)]
-        public string Desc { get; set; }
+        public string Description { get; set; }
 
         [Required]
         public decimal Price { get; set; }

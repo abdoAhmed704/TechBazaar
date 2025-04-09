@@ -22,7 +22,8 @@ namespace TechBazaar.Controllers
         public async Task<IActionResult> Index()
         {
             var products = await unitOfWork.Product
-                .Include(p => new { p.Category, p.Images })
+                .Include(p => p.Category)
+                .Include(p => p.Images)
                 .ToListAsync();
             return View(products);
         }
@@ -69,7 +70,7 @@ namespace TechBazaar.Controllers
                 var product = new Product
                 {
                     Name = model.Name,
-                    Desc = model.Description,
+                    Description = model.Description,
                     Price = model.Price,
                     CategoryId = model.CategoryId,
                     Images = new List<Image>()
@@ -136,7 +137,7 @@ namespace TechBazaar.Controllers
             var viewModel = new ProductCreateViewModel
             {
                 Name = product.Name,
-                Description = product.Desc,
+                Description = product.Description,
                 Price = product.Price,
                 CategoryId = product.CategoryId,
                 Categories = unitOfWork.Category
@@ -170,7 +171,7 @@ namespace TechBazaar.Controllers
                     }
 
                     product.Name = model.Name;
-                    product.Desc = model.Description;
+                    product.Description = model.Description;
                     product.Price = model.Price;
                     product.CategoryId = model.CategoryId;
 

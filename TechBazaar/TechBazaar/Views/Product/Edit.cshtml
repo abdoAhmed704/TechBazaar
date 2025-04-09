@@ -1,4 +1,5 @@
-﻿@model ProductCreateViewModel
+﻿@using System.Text.Json
+@model ProductCreateViewModel
 
 <h2>Edit Product</h2>
 
@@ -35,7 +36,7 @@
         <div>
             @if (TempData["ExistingImages"] != null)
             {
-                var images = JsonSerializer.Deserialize<List<ProductImage>>(TempData["ExistingImages"].ToString());
+                var images = JsonSerializer.Deserialize<List<Image>>(TempData["ExistingImages"].ToString());
                 foreach (var image in images)
                 {
                     <div>
