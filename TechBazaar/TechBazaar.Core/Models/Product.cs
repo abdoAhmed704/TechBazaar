@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography.Xml;
 
 namespace TechBazaar.Core.Models
 {
@@ -33,7 +34,7 @@ namespace TechBazaar.Core.Models
         public DateTime? DeletedAt { get; set; }
 
 
-        public Inventory Inventory { get; set; }
+        public Inventory Inventory { get; set; } = new Inventory();
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
         public ICollection<WishItem> WishItems { get; set; } = new List<WishItem>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();

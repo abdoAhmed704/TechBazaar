@@ -26,6 +26,12 @@
     </div>
 
     <div class="form-group">
+        <label asp-for="Quantity"></label>
+        <input asp-for="Quantity" class="form-control" />
+        <span asp-validation-for="Quantity" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
         <label asp-for="DiscountIds">Discount</label>
         <select asp-for="DiscountIds" asp-items="Model.Discounts" class="form-control" multiple="multiple">
             <option value="">Select a discount</option>

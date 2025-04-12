@@ -41,6 +41,7 @@ namespace TechBazaar.Controllers
             var product = await unitOfWork.Product
                 .Include(p => p.Category)
                 .Include(p => p.Images)
+                .Include(p =>p.Inventory)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (product == null)
@@ -79,6 +80,8 @@ namespace TechBazaar.Controllers
         {
             if (ModelState.IsValid)
             {
+                
+
                 var product = new Product
                 {
                     Name = model.Name,
@@ -87,6 +90,9 @@ namespace TechBazaar.Controllers
                     CategoryId = model.CategoryId,
                     Images = new List<Image>()
                 };
+                // Handle inventory
+                product.Inventory.Quantity = model.Quantity;
+
                 // Handle discounts
                 if (model.DiscountIds != null && model.DiscountIds.Count > 0)
                 {

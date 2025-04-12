@@ -14,6 +14,7 @@ namespace TechBazaar.Ef
         public IBaseRepository<Product> Product { get; private set; }
         public IBaseRepository<Discount> Discount { get; private set; }
         public IBaseRepository<ProductDiscount> ProductDiscount { get; private set; }
+        public IBaseRepository<Inventory> Inventory { get; private set; }
 
         public UnitOfWork(EContext eContext)
         {
@@ -22,6 +23,7 @@ namespace TechBazaar.Ef
             Product = new BaseRepository<Product>(eContext);
             Discount = new BaseRepository<Discount>(eContext);
             ProductDiscount = new BaseRepository<ProductDiscount>(eContext);
+            Inventory = new BaseRepository<Inventory>(eContext);
         }
 
 

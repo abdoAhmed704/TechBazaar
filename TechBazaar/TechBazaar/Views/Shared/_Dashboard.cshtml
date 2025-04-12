@@ -52,10 +52,11 @@
     <div class="sidebar d-flex flex-column p-3">
         <h4 class="text-white mb-4">🛒 TechBazaar</h4>
         <a href="/dashboard" class="active"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a>
-        <a href="/product"><i class="bi bi-box-seam me-2"></i> Products</a>
-        <a href="/order"><i class="bi bi-cart-check me-2"></i> Orders</a>
-        <a href="/Category"><i class="bi bi-people me-2"></i> Categories</a>
-        <a href="/Discount"><i class="bi bi-people me-2"></i> Discounts</a>
+        <a asp-controller="Product" asp-action="Index"><i class="bi bi-box-seam me-2"></i> Products</a>
+        <a asp-controller="Order" asp-action="Index"><i class="bi bi-cart-check me-2"></i> Orders</a>
+        <a asp-controller="Category" asp-action="Index"><i class="bi bi-people me-2"></i> Categories</a>
+        <a asp-controller="Discount" asp-action="Index"><i class="bi bi-people me-2"></i> Discounts</a>
+        <a asp-controller="Inventory" asp-action="Index"><i class="bi bi-people me-2"></i> Inventory</a>
       @*   <a href="/reports"><i class="bi bi-graph-up me-2"></i> Reports</a>
         <a href="/settings"><i class="bi bi-gear me-2"></i> Settings</a> *@
         <hr class="text-secondary" />
