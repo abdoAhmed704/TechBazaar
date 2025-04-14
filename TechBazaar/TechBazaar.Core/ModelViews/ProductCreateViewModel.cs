@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
+using TechBazaar.Core.Models;
 
 namespace TechBazaar.Core.ModelViews
 {
@@ -20,6 +21,8 @@ namespace TechBazaar.Core.ModelViews
         public List<int> DiscountIds { get; set; } = new List<int>();
         public List<SelectListItem> Discounts { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
+        public List<Image> ExistingImages { get; set; } = new List<Image>();
         public List<IFormFile> ImageFiles { get; set; } = new List<IFormFile>();
+        public List<int> ImagesToDelete { get; set; } = new List<int>();
     }
 }

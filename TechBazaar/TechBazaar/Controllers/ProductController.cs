@@ -145,6 +145,13 @@ namespace TechBazaar.Controllers
                     Value = c.Id.ToString(),
                     Text = c.Name
                 }).ToList();
+            model.Discounts = unitOfWork.Discount
+                .GetAll(d => d.IsActive == true && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now)
+                .Select(d => new SelectListItem
+                {
+                    Value = d.Id.ToString(),
+                    Text = d.Name
+                }).ToList();
 
             return View(model);
         }
@@ -183,11 +190,11 @@ namespace TechBazaar.Controllers
                     {
                         Value = d.Id.ToString(),
                         Text = d.Name
-                    }).ToList()
-            };
-            // Store existing images in TempData for use in the view
+                    }).ToList(),
+                ExistingImages = product.Images.ToList()
 
-            TempData["ExistingImages"] = JsonSerializer.Serialize(product.Images.Select(i => new { i.Id, i.ImageUrl }).ToList());
+            };
+
             return View(viewModel);
         }
 
@@ -225,12 +232,13 @@ namespace TechBazaar.Controllers
                             ProductId = product.Id,
                             DiscountId = discountId
                         };
+                        unitOfWork.ProductDiscount.Add(discount);
                     }
 
                     // Handle new image uploads
                     if (model.ImageFiles != null && model.ImageFiles.Count > 0)
                     {
-                        string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "uploads");
+                        string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "ProductImages");
                         Directory.CreateDirectory(uploadsFolder);
 
                         foreach (var file in model.ImageFiles)
@@ -247,8 +255,25 @@ namespace TechBazaar.Controllers
 
                                 product.Images.Add(new Image
                                 {
-                                    ImageUrl = "/uploads/" + fileName
+                                    ImageUrl = "/ProductImages/" + fileName
                                 });
+                            }
+                        }
+                    }
+                    // Handle image deletions
+                    if (model.ImagesToDelete != null && model.ImagesToDelete.Count > 0)
+                    {
+                        foreach (var imageId in model.ImagesToDelete)
+                        {
+                            var image = product.Images.FirstOrDefault(i => i.Id == imageId);
+                            if (image != null)
+                            {
+                                var filePath = Path.Combine(webHostEnvironment.WebRootPath, image.ImageUrl.TrimStart('/'));
+                                if (System.IO.File.Exists(filePath))
+                                {
+                                    System.IO.File.Delete(filePath);
+                                }
+                                product.Images.Remove(image);
                             }
                         }
                     }
@@ -273,6 +298,8 @@ namespace TechBazaar.Controllers
                     Value = c.Id.ToString(),
                     Text = c.Name
                 }).ToList();
+            model.ExistingImages = (List<Image>) await unitOfWork.Image
+                .GetAllAsync(i => i.ProductId == id);
 
             return View(model);
         }

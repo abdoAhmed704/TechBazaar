@@ -1,5 +1,4 @@
-﻿@using System.Text.Json
-@model ProductCreateViewModel
+﻿@model ProductCreateViewModel
 
 @{
     Layout = "_Dashboard";
@@ -46,16 +45,22 @@
     <div class="form-group">
         <label>Current Images</label>
         <div>
-            @if (TempData["ExistingImages"] != null)
+            @if (Model.ExistingImages.Any())
             {
-                var images = JsonSerializer.Deserialize<List<Image>>(TempData["ExistingImages"].ToString());
-                foreach (var image in images)
+                foreach (var image in Model.ExistingImages)
                 {
                     <div>
                         <img src="@image.ImageUrl" alt="Product Image" style="max-width: 200px; margin: 5px;" />
-                        <!-- You could add delete functionality here with additional implementation -->
+                        <div>
+                            <input type="checkbox" name="ImagesToDelete" value="@image.Id" />
+                            <label>Delete</label>
+                        </div>
                     </div>
                 }
+            }
+            else
+            {
+                <p>No images uploaded yet.</p>
             }
         </div>
     </div>
