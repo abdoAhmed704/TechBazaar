@@ -27,13 +27,13 @@ namespace TechBazaar.Controllers
         {
             // Check if the model is valid
             if (!ModelState.IsValid) return View(user);
-            if(userManager.FindByEmailAsync(user.Email) != null)
+            if(await userManager.FindByEmailAsync(user.Email) != null)
             {
                 ModelState.AddModelError("", "Email already exists.");
                 return View(user);
             }
             // Check if the username is already taken
-            if(userManager.FindByNameAsync(user.UserName) != null)
+            if(await userManager.FindByNameAsync(user.UserName) != null)
             {
                 ModelState.AddModelError("", "Username already exists.");
                 return View(user);
@@ -43,8 +43,12 @@ namespace TechBazaar.Controllers
             {
                 UserName = user.UserName,
                 Email = user.Email,
+                CreatedAt = DateTime.UtcNow,
             };
+
+
             var result = await userManager.CreateAsync(newUser, user.Password);
+
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
@@ -59,6 +63,7 @@ namespace TechBazaar.Controllers
 
             return RedirectToAction("Login", "Account");
         }
+
         [HttpGet]
         public IActionResult Login()
         {

@@ -5,46 +5,31 @@ namespace TechBazaar.Core.Models
 {
     public class ApplicationUser:IdentityUser
     {
-        [Required]
         [StringLength(50)]
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
-        [Required]
         [StringLength(50)]
-        public string LastName { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string? LastName { get; set; }
 
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        [Required]
         public DateTime ModifiedAt { get; set; }
 
 
-        [Required]
         [StringLength(100)]
-        public string AddressLine1 { get; set; }
+        public string? AddressLine1 { get; set; }
 
-        [StringLength(100)]
-        public string AddressLine2 { get; set; }
+        public string? AddressLine2 { get; set; }
 
-        [Required]
         [StringLength(50)]
-        public string City { get; set; }
+        public string? City { get; set; }
 
-        [Required]
         [StringLength(50)]
-        public string Country { get; set; }
+        public string? Country { get; set; }
 
-        [Required]
         [StringLength(20)]
         public int PostalCode { get; set; }
-
-        [Required]
-        public string Phone { get; set; }
 
         // Navigation properties
         public ICollection<WishList> WishLists { get; set; } = new List<WishList>();

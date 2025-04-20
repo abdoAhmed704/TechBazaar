@@ -1,20 +1,14 @@
 ﻿@model TechBazaar.Core.ModelViews.UserRegisterModelView
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Register";
+
 }
 
-<!DOCTYPE html>
+<h1>Register</h1>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Register</title>
-</head>
-<body>
-
-<h4>UserRegisterModelView</h4>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Register">
@@ -47,11 +41,10 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+     or <a asp-controller = "Account" asp-action="loging">login</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-</body>
-</html>
+

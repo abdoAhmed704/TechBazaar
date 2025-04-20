@@ -12,8 +12,8 @@ using TechBazaar.Ef;
 namespace TechBazaar.Ef.Migrations
 {
     [DbContext(typeof(EContext))]
-    [Migration("20250409100136_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250420175359_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -173,8 +173,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.Property<string>("AddressLine2")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -227,15 +226,7 @@ namespace TechBazaar.Ef.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -341,13 +332,11 @@ namespace TechBazaar.Ef.Migrations
 
                     b.Property<string>("Desc")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
