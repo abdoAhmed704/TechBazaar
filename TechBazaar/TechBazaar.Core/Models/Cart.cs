@@ -9,8 +9,8 @@ namespace TechBazaar.Core.Models
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("ApplicationUser")]
-        public string UserId { get; set; }
+        [ForeignKey("ApplicationUser"),Required]
+        public string? UserId { get; set; }
 
         [Required]
         public decimal Total { get; set; }
@@ -19,11 +19,11 @@ namespace TechBazaar.Core.Models
         public CartStatus Status { get; set; }
 
         [Required]
-        [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        [DataType(DataType.DateTime)]
         public DateTime ModifiedAt { get; set; }
+
+        public bool IsActive { get; set; } = true;
 
         public ApplicationUser? ApplicationUser { get; set; }
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();

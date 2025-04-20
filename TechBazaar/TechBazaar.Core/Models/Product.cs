@@ -11,11 +11,15 @@ namespace TechBazaar.Core.Models
 
         [Required]
         [StringLength(100)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string? ShortDescription { get; set; }
 
         [Required]
         [StringLength(500)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [Required]
         public decimal Price { get; set; }
@@ -23,24 +27,23 @@ namespace TechBazaar.Core.Models
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
 
+        [ForeignKey("Brand")]
+        public int BrandId { get; set; }
+
         [Required]
-        [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-        [DataType(DataType.DateTime)]
         public DateTime? ModifiedAt { get; set; }
-
-        [DataType(DataType.DateTime)]
         public DateTime? DeletedAt { get; set; }
 
+        public bool IsActive { get; set; } = true;
 
         public Inventory Inventory { get; set; } = new Inventory();
+        public Category? Category { get; set; }
+        public Brand? Brand { get; set; }
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
         public ICollection<WishItem> WishItems { get; set; } = new List<WishItem>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<Image> Images { get; set; } = new List<Image>();
-
-        public Category Category { get; set; }
         public ICollection<ProductDiscount> ProductDiscounts { get; set; } = new List<ProductDiscount>();
     }
 }

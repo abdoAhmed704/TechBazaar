@@ -16,7 +16,6 @@ namespace TechBazaar.Core.Models
         [StringLength(50)]
         public int Quantity { get; set; } 
 
-
         public Product Product { get; set; }
     }
 }

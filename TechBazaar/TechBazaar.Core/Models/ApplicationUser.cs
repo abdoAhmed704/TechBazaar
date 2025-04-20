@@ -16,11 +16,15 @@ namespace TechBazaar.Core.Models
 
         public DateTime ModifiedAt { get; set; }
 
+        public bool IsActive { get; set; } = true;
+
 
         [StringLength(100)]
-        public string? AddressLine1 { get; set; }
 
-        public string? AddressLine2 { get; set; }
+        public string? Street { get; set; }
+        public int BuldingNo { get; set; }
+        public int Floor { get; set; }
+        public int AppartmentNo { get; set; }
 
         [StringLength(50)]
         public string? City { get; set; }

@@ -25,7 +25,12 @@ namespace TechBazaar.Core.Models
         [DataType(DataType.DateTime)]
         public DateTime? EndDate { get; set; }
 
-        public bool IsActive { get; set; }
+        [Required]
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime ModifiedAt { get; set; }
+
+        public bool IsActive { get; set; } = true;
 
         public ICollection<ProductDiscount> Products { get; set; } = new List<ProductDiscount>();
         
