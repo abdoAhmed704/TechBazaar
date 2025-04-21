@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TechBazaar.Core.Interfaces;
 using TechBazaar.Core.Models;
+using TechBazaar.Core.ModelViews;
 using TechBazaar.Ef;
 
 namespace TechBazaar.Controllers
@@ -14,28 +16,23 @@ namespace TechBazaar.Controllers
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public CategoryController(IUnitOfWork unitOfWork)
+        public CategoryController(IUnitOfWork unitOfWork,IWebHostEnvironment webHostEnvironment)
         {
             this.unitOfWork = unitOfWork;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
-        // GET: Category
         public async Task<IActionResult> Index()
         {
-            return View(await unitOfWork.Category.GetAllAsync());
+            return View(await unitOfWork.Category.GetAllCategoriesAsync());
         }
 
-        // GET: Category/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var category = await unitOfWork.Category
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var category = await unitOfWork.Category.GetCategoryByIdAsync(id);
             if (category == null)
             {
                 return NotFound();
@@ -44,87 +41,120 @@ namespace TechBazaar.Controllers
             return View(category);
         }
 
-        // GET: Category/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Category/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Category category)
+        public async Task<IActionResult> Create(CategoryModelView category)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                unitOfWork.Category.Add(category);
-                await unitOfWork.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(category);
             }
-            return View(category);
+            var newCategory = new Category
+            {
+                Name = category.Name,
+                Description = category.Description,
+                CreatedAt = DateTime.UtcNow,
+                IsActive = category.IsActive,
+            };
+            if (category.ImageFile != null)
+            {
+                // Save the image to the server
+                var uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "CategoryImages");
+                Directory.CreateDirectory(uploadsFolder);
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(category.ImageFile.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await category.ImageFile.CopyToAsync(stream);
+                }
+
+                // Save the file name to the database
+                newCategory.ImageUrl = "/CategoryImages/" + fileName;
+            }
+
+            unitOfWork.Category.Add(newCategory);
+            await unitOfWork.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+            
         }
 
-        // GET: Category/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var category = await unitOfWork.Category.FindAsync(id ?? 0);
+            var category = await unitOfWork.Category.GetCategoryByIdAsync(id);
             if (category == null)
             {
                 return NotFound();
             }
-            return View(category);
+            var categoryModelView = new CategoryModelView
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description = category.Description,
+                IsActive = category.IsActive,
+                CurrentImageUrl = category.ImageUrl
+            };
+            return View(categoryModelView);
         }
 
-        // POST: Category/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Desc")] Category category)
+        public async Task<IActionResult> Edit(int id, CategoryModelView category)
         {
-            if (id != category.Id)
+            if (!ModelState.IsValid)
+            {
+                return View(category);
+            }
+            var existingCategory = await unitOfWork.Category.GetCategoryByIdAsync(id);
+            if (existingCategory == null)
             {
                 return NotFound();
             }
+            existingCategory.Name = category.Name;
+            existingCategory.IsActive = category.IsActive;
+            existingCategory.Description = category.Description;
+            existingCategory.ModifiedAt = DateTime.UtcNow;
 
-            if (ModelState.IsValid)
+            if (category.ImageFile is not null)
             {
-                try
+                // Delete the old image if it exists
+                if (!string.IsNullOrEmpty(existingCategory.ImageUrl))
                 {
-                    unitOfWork.Category.Update(category);
-                    await unitOfWork.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CategoryExists(category.Id))
+                    var oldImagePath = Path.Combine(webHostEnvironment.WebRootPath, existingCategory.ImageUrl.TrimStart('/'));
+                    if (System.IO.File.Exists(oldImagePath))
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
+                        System.IO.File.Delete(oldImagePath);
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                // Save the image to the server
+                var uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "CategoryImages");
+                Directory.CreateDirectory(uploadsFolder);
+                var FileName = Guid.NewGuid().ToString() + Path.GetExtension(category.ImageFile.FileName);
+                var filePath = Path.Combine(uploadsFolder, FileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await category.ImageFile.CopyToAsync(stream);
+                }
+
+                // Save the file name to the database
+                existingCategory.ImageUrl = "/CategoryImages/" + FileName;
             }
-            return View(category);
+
+            unitOfWork.Category.Update(existingCategory);
+            await unitOfWork.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
 
-        // GET: Category/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var category = await unitOfWork.Category
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (category == null)
@@ -135,24 +165,18 @@ namespace TechBazaar.Controllers
             return View(category);
         }
 
-        // POST: Category/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await unitOfWork.Category.FindAsync(id);
+            var category = await unitOfWork.Category.GetCategoryByIdAsync(id);
             if (category != null)
             {
                 unitOfWork.Category.Delete(category);
             }
 
             await unitOfWork.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool CategoryExists(int id)
-        {
-            return unitOfWork.Category.Exists(id);
+            return RedirectToAction("Index");
         }
     }
 }

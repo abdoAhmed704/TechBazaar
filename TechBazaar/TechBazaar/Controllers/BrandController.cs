@@ -20,10 +20,6 @@ namespace TechBazaar.Controllers
         public IActionResult Index()
         {
             var brands = unitOfWork.Brand.GetAllBrandsAsync();
-            if (brands == null)
-            {
-                return NotFound();
-            }
             return View(brands);
         }
         public async Task<IActionResult> Details(int id)
@@ -156,7 +152,7 @@ namespace TechBazaar.Controllers
             return View(brand);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(int id)
         {
