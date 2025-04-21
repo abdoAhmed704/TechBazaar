@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +17,24 @@ namespace TechBazaar.Ef.Repository
         {
             this.eContext = eContext;
         }
+
         public async Task<Brand> GetBrandByIdAsync(int id)
         {
             return await eContext.Set<T>().FindAsync(id);
         }
+
         public async Task<IEnumerable<Brand>> GetAllBrandsAsync()
         {
             return await eContext.Set<T>().ToListAsync();
+        }
+
+        public async Task<IEnumerable<SelectListItem>> GetBrandsToSelectListItem()
+        {
+            return await eContext.Set<T>().Where(b => b.IsActive == true).Select(b => new SelectListItem
+            {
+                Value = b.Id.ToString(),
+                Text = b.Name
+            }).ToListAsync();
         }
     }
 }

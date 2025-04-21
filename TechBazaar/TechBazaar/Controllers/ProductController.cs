@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TechBazaar.Ef;
 using Microsoft.Data.SqlClient;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 
 namespace TechBazaar.Controllers
@@ -24,26 +25,15 @@ namespace TechBazaar.Controllers
         public async Task<IActionResult> Index()
         {
 
-           var products = await unitOfWork.Product
-               .Include(p => p.Category)
-               .Include(p => p.Brand)
-               .ToListAsync();
+            var products = await unitOfWork.Product.GetAllProductsAsync();
 
            return View(products);
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var product = await unitOfWork.Product
-                .Include(p => p.Category)
-                .Include(p => p.Images)
-                .Include(p =>p.Inventory)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var product = await unitOfWork.Product.GetProductByIdAsync(id);
 
             if (product == null)
             {
@@ -53,17 +43,13 @@ namespace TechBazaar.Controllers
             return View(product);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
 
             var viewModel = new ProductCreateViewModel
             {
-                Categories = unitOfWork.Category
-                .Select(c => new SelectListItem
-                {
-                    Value = c.Id.ToString(),
-                    Text = c.Name
-                }).ToList(),
+                Categories = await unitOfWork.Category.GetCategoriesToSelectListItem(),
+                Brands = await unitOfWork.Brand.GetBrandsToSelectListItem(),
                 Discounts = unitOfWork.Discount
                 .GetAll(d => d.IsActive == true && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now)
                 .Select(d => new SelectListItem
@@ -140,12 +126,10 @@ namespace TechBazaar.Controllers
             }
 
             // If model state is invalid, repopulate categories
-            model.Categories = unitOfWork.Category
-                .Select(c => new SelectListItem
-                {
-                    Value = c.Id.ToString(),
-                    Text = c.Name
-                }).ToList();
+            model.Categories = await unitOfWork.Category.GetCategoriesToSelectListItem();
+
+            model.Brands = await unitOfWork.Brand.GetBrandsToSelectListItem();
+
             model.Discounts = unitOfWork.Discount
                 .GetAll(d => d.IsActive == true && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now)
                 .Select(d => new SelectListItem

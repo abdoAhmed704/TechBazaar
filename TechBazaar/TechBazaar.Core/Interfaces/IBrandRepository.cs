@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,7 @@ namespace TechBazaar.Core.Interfaces
     {
         Task<Brand> GetBrandByIdAsync(int id);
         Task<IEnumerable<Brand>> GetAllBrandsAsync();
+        Task<IEnumerable<SelectListItem>> GetBrandsToSelectListItem();
+
     }
 }

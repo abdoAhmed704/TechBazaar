@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,8 @@ namespace TechBazaar.Core.Interfaces
 {
     public interface ICategoryRepository<T> : IBaseRepository<T> where T : Category
     {
-        Task<Category> GetCategoryByIdAsync(int id);
-        Task<IEnumerable<Category>> GetAllCategoriesAsync();
+        Task<T> GetCategoryByIdAsync(int id);
+        Task<IEnumerable<T>> GetAllCategoriesAsync();
+        Task<IEnumerable<SelectListItem>> GetCategoriesToSelectListItem();
     }
 }

@@ -19,8 +19,9 @@ namespace TechBazaar.Core.ModelViews
         public int Quantity { get; set; }
         public int CategoryId { get; set; }
         public List<int> DiscountIds { get; set; } = new List<int>();
-        public List<SelectListItem> Discounts { get; set; } = new List<SelectListItem>();
-        public List<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> Discounts { get; set; } = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> Brands { get; set; } = new List<SelectListItem>();
         public List<Image> ExistingImages { get; set; } = new List<Image>();
         public List<IFormFile> ImageFiles { get; set; } = new List<IFormFile>();
         public List<int> ImagesToDelete { get; set; } = new List<int>();

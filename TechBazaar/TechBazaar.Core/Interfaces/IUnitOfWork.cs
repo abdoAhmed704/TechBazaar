@@ -5,7 +5,7 @@ namespace TechBazaar.Core.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         ICategoryRepository<Category> Category { get; }
-        IBaseRepository<Product> Product { get; }
+        IProductRepository<Product> Product { get; }
         public IBaseRepository<Discount> Discount { get;}
         public IBaseRepository<ProductDiscount> ProductDiscount { get;}
         public IBaseRepository<Inventory> Inventory { get; }
