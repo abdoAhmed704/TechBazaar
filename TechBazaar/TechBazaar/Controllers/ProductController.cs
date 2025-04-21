@@ -26,6 +26,7 @@ namespace TechBazaar.Controllers
 
            var products = await unitOfWork.Product
                .Include(p => p.Category)
+               .Include(p => p.Brand)
                .ToListAsync();
 
            return View(products);

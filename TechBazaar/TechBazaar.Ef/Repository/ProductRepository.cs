@@ -1,0 +1,34 @@
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TechBazaar.Core.Interfaces;
+using TechBazaar.Core.Models;
+
+namespace TechBazaar.Ef.Repository
+{
+    public class ProductRepository<T>: BaseRepository<T>,IProductRepository<T> where T : Product
+    {
+        private readonly EContext eContext;
+
+        public ProductRepository(EContext eContext) : base(eContext)
+        {
+            this.eContext = eContext;
+        }
+
+        public async Task<Product> GetProductByIdAsync(int id)
+        {
+            return await eContext.Set<T>().Include(p => p.Category).
+                Include(p => p.Brand).Include(p => p.Inventory).FirstOrDefaultAsync(p =>p.Id == id && p.DeletedAt == null);
+        }
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        {
+            return await eContext.Set<T>().Include(p => p.Category).
+                Include(p => p.Brand).Where(p => p.DeletedAt == null).ToListAsync();
+        }
+
+
+    }
+}
