@@ -17,9 +17,9 @@ namespace TechBazaar.Controllers
             this.unitOfWork = unitOfWork;
             this.webHostEnvironment = webHostEnvironment;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var brands = unitOfWork.Brand.GetAllBrandsAsync();
+            var brands = await unitOfWork.Brand.GetAllBrandsAsync();
             return View(brands);
         }
         public async Task<IActionResult> Details(int id)

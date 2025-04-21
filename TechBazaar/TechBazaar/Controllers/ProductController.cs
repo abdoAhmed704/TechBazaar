@@ -67,8 +67,10 @@ namespace TechBazaar.Controllers
                 {
                     Name = model.Name,
                     Description = model.Description,
+                    ShortDescription = model.ShortDescription,
                     Price = model.Price,
                     CategoryId = model.CategoryId,
+                    BrandId = model.BrandId,
                     Images = new List<Image>()
                 };
                 // Handle inventory
@@ -149,6 +151,7 @@ namespace TechBazaar.Controllers
             {
                 Name = product.Name,
                 Description = product.Description,
+                ShortDescription = product.ShortDescription,
                 Price = product.Price,
                 CategoryId = product.CategoryId,
                 BrandId = product.BrandId,
@@ -182,6 +185,7 @@ namespace TechBazaar.Controllers
 
                     product.Name = model.Name;
                     product.Description = model.Description;
+                    product.ShortDescription = model.ShortDescription;
                     product.Price = model.Price;
                     product.CategoryId = model.CategoryId;
                     product.BrandId = model.BrandId;

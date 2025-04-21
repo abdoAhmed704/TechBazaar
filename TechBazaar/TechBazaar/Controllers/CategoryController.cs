@@ -43,7 +43,7 @@ namespace TechBazaar.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            return View(new CategoryModelView());
         }
 
         [HttpPost]

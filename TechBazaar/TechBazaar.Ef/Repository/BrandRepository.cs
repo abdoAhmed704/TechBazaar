@@ -18,12 +18,12 @@ namespace TechBazaar.Ef.Repository
             this.eContext = eContext;
         }
 
-        public async Task<Brand> GetBrandByIdAsync(int id)
+        public async Task<T> GetBrandByIdAsync(int id)
         {
             return await eContext.Set<T>().FindAsync(id);
         }
 
-        public async Task<IEnumerable<Brand>> GetAllBrandsAsync()
+        public async Task<IEnumerable<T>> GetAllBrandsAsync()
         {
             return await eContext.Set<T>().ToListAsync();
         }

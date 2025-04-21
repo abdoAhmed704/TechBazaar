@@ -13,6 +13,11 @@ namespace TechBazaar.Core.ModelViews
     public class ProductCreateViewModel
     {
         public string Name { get; set; }
+
+        [StringLength(100)]
+        public string ShortDescription { get; set; }
+
+        [StringLength(500)]
         public string Description { get; set; }
         public decimal Price { get; set; }
         [Required]

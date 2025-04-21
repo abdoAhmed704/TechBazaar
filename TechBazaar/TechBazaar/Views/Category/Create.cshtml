@@ -3,14 +3,13 @@
 @{
     Layout = "_Dashboard";
 }
-
 <h1>Create</h1>
-
 <h4>Category</h4>
+
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" asp-controller="Category">
+        <form asp-action="Create" asp-controller="Category" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -27,12 +26,14 @@
                 <input asp-for="ImageFile" class="form-control" />
                 <span asp-validation-for="ImageFile" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="IsActive" class="control-label"></label>
-                <input asp-for="IsActive" class="form-control" />
+                <input asp-for="IsActive" type="checkbox" class="form-check-input"/>
                 <span asp-validation-for="IsActive" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group mt-1">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

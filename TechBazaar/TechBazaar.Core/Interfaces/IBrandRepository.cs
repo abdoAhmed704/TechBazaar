@@ -10,8 +10,8 @@ namespace TechBazaar.Core.Interfaces
 {
     public interface IBrandRepository<T> : IBaseRepository<T> where T : Brand
     {
-        Task<Brand> GetBrandByIdAsync(int id);
-        Task<IEnumerable<Brand>> GetAllBrandsAsync();
+        Task<T> GetBrandByIdAsync(int id);
+        Task<IEnumerable<T>> GetAllBrandsAsync();
         Task<IEnumerable<SelectListItem>> GetBrandsToSelectListItem();
 
     }

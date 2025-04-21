@@ -21,7 +21,7 @@ namespace TechBazaar.Ef.Repository
         public async Task<T> GetProductByIdAsync(int id)
         {
             return await eContext.Set<T>().Include(p => p.Category).
-                Include(p => p.Brand).Include(p => p.Inventory).FirstOrDefaultAsync(p =>p.Id == id && p.DeletedAt == null);
+                Include(p => p.Brand).Include(p => p.Inventory).Include(p => p.Images).FirstOrDefaultAsync(p =>p.Id == id && p.DeletedAt == null);
         }
 
         public async Task<T> GetProductByIdWithImages(int id)
