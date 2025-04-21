@@ -13,11 +13,12 @@ namespace TechBazaar.Core.Models
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("Product")]
+        [ForeignKey("Product"),Required]
         public int ProductId { get; set; }
 
+        [Required]
         public string ImageUrl { get; set; }
 
-        public Product Product { get; set; }
+        public Product? Product { get; set; }
     }
 }

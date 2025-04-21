@@ -9,7 +9,7 @@ namespace TechBazaar.Core.Models
         public int Id { get; set; }
 
         [ForeignKey("ApplicationUser")]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         [ForeignKey("Cart")]
         public int OrderId { get; set; }
@@ -22,7 +22,7 @@ namespace TechBazaar.Core.Models
 
         [Required]
         [StringLength(50)]
-        public string PaymentMethod { get; set; }
+        public string? PaymentMethod { get; set; }
 
         [Required]
         [StringLength(20)]
@@ -31,14 +31,14 @@ namespace TechBazaar.Core.Models
         [Required]
         [StringLength(10)]
         [DataType(DataType.Date)]
-        public string ExpireDate { get; set; }
+        public string? ExpireDate { get; set; }
 
         [Required]
         [StringLength(4)]
-        public string CVV { get; set; }
+        public string? CVV { get; set; }
 
         public ApplicationUser? ApplicationUser { get; set; }
-        public Cart Cart { get; set; }
-        public PaymentStatus PaymentStatus { get; set; }
+        public Cart? Cart { get; set; }
+        public PaymentStatus? PaymentStatus { get; set; }
     }
 }

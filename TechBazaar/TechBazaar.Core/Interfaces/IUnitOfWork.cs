@@ -10,6 +10,7 @@ namespace TechBazaar.Core.Interfaces
         public IBaseRepository<ProductDiscount> ProductDiscount { get;}
         public IBaseRepository<Inventory> Inventory { get; }
         public IBaseRepository<Image> Image { get; }
+        public IBrandRepository<Brand> Brand { get; }
         void SaveChanges();
         Task SaveChangesAsync();
 
