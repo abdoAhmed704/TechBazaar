@@ -6,7 +6,7 @@ namespace TechBazaar.Core.Interfaces
     {
         ICategoryRepository<Category> Category { get; }
         IProductRepository<Product> Product { get; }
-        public IBaseRepository<Discount> Discount { get;}
+        public IDiscountRepository<Discount> Discount { get;}
         public IBaseRepository<ProductDiscount> ProductDiscount { get;}
         public IBaseRepository<Inventory> Inventory { get; }
         public IBaseRepository<Image> Image { get; }

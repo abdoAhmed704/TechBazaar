@@ -50,13 +50,7 @@ namespace TechBazaar.Controllers
             {
                 Categories = await unitOfWork.Category.GetCategoriesToSelectListItem(),
                 Brands = await unitOfWork.Brand.GetBrandsToSelectListItem(),
-                Discounts = unitOfWork.Discount
-                .GetAll(d => d.IsActive == true && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now)
-                .Select(d => new SelectListItem
-                {
-                    Value = d.Id.ToString(),
-                    Text = d.Name
-                }).ToList()
+                Discounts = await unitOfWork.Discount.GetDiscountsToSelectListItem()
 
             };
             return View(viewModel);
@@ -130,13 +124,7 @@ namespace TechBazaar.Controllers
 
             model.Brands = await unitOfWork.Brand.GetBrandsToSelectListItem();
 
-            model.Discounts = unitOfWork.Discount
-                .GetAll(d => d.IsActive == true && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now)
-                .Select(d => new SelectListItem
-                {
-                    Value = d.Id.ToString(),
-                    Text = d.Name
-                }).ToList();
+            model.Discounts = await unitOfWork.Discount.GetDiscountsToSelectListItem();
 
             return View(model);
         }
@@ -163,19 +151,10 @@ namespace TechBazaar.Controllers
                 Description = product.Description,
                 Price = product.Price,
                 CategoryId = product.CategoryId,
-                Categories = unitOfWork.Category
-                    .Select(c => new SelectListItem
-                    {
-                        Value = c.Id.ToString(),
-                        Text = c.Name
-                    }).ToList(),
-                Discounts = unitOfWork.Discount
-                    .GetAll(d => d.IsActive == true && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now)
-                    .Select(d => new SelectListItem
-                    {
-                        Value = d.Id.ToString(),
-                        Text = d.Name
-                    }).ToList(),
+                BrandId = product.BrandId,
+                Categories = await unitOfWork.Category.GetCategoriesToSelectListItem(),
+                Brands = await unitOfWork.Brand.GetBrandsToSelectListItem(),
+                Discounts = await unitOfWork.Discount.GetDiscountsToSelectListItem(),
                 ExistingImages = product.Images.ToList()
 
             };
@@ -183,7 +162,7 @@ namespace TechBazaar.Controllers
             return View(viewModel);
         }
 
-        // POST: Products/Edit/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ProductCreateViewModel model)
@@ -205,6 +184,7 @@ namespace TechBazaar.Controllers
                     product.Description = model.Description;
                     product.Price = model.Price;
                     product.CategoryId = model.CategoryId;
+                    product.BrandId = model.BrandId;
 
                     // Handle discounts
                     var currentDicounts = unitOfWork.ProductDiscount.GetAll(p => p.ProductId == product.Id).ToList();
@@ -274,16 +254,13 @@ namespace TechBazaar.Controllers
                     }
                     throw;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
 
-            model.Categories = unitOfWork.Category
-                .Select(c => new SelectListItem
-                {
-                    Value = c.Id.ToString(),
-                    Text = c.Name
-                }).ToList();
-            model.ExistingImages = (List<Image>) await unitOfWork.Image
+            model.Categories = await unitOfWork.Category.GetCategoriesToSelectListItem();
+            model.Brands = await unitOfWork.Brand.GetBrandsToSelectListItem();
+            model.Discounts = await unitOfWork.Discount.GetDiscountsToSelectListItem();
+            model.ExistingImages = (List<Image>)await unitOfWork.Image
                 .GetAllAsync(i => i.ProductId == id);
 
             return View(model);
@@ -293,9 +270,7 @@ namespace TechBazaar.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var product = await unitOfWork.Product
-                .Include(p => p.Images)
-                .FirstOrDefaultAsync(p => p.Id == id);
+            var product = await unitOfWork.Product.GetProductByIdWithImages(id);
 
             if (product == null)
             {
@@ -311,8 +286,10 @@ namespace TechBazaar.Controllers
                     System.IO.File.Delete(filePath);
                 }
             }
+            product.DeletedAt = DateTime.Now;
+            product.IsActive = false;
 
-            unitOfWork.Product.Delete(product);
+            unitOfWork.Product.Update(product);
             await unitOfWork.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));

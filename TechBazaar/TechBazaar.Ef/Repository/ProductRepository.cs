@@ -18,17 +18,23 @@ namespace TechBazaar.Ef.Repository
             this.eContext = eContext;
         }
 
-        public async Task<Product> GetProductByIdAsync(int id)
+        public async Task<T> GetProductByIdAsync(int id)
         {
             return await eContext.Set<T>().Include(p => p.Category).
                 Include(p => p.Brand).Include(p => p.Inventory).FirstOrDefaultAsync(p =>p.Id == id && p.DeletedAt == null);
         }
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+
+        public async Task<T> GetProductByIdWithImages(int id)
+        {
+            return await eContext.Set<T>().Include(p => p.Images).FirstOrDefaultAsync(p => p.DeletedAt == null && p.Id == id);
+        }
+
+        public async Task<IEnumerable<T>> GetAllProductsAsync()
         {
             return await eContext.Set<T>().Include(p => p.Category).
                 Include(p => p.Brand).Where(p => p.DeletedAt == null).ToListAsync();
         }
 
-
+        
     }
 }

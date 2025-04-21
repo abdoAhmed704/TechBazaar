@@ -18,6 +18,8 @@ namespace TechBazaar.Core.ModelViews
         [Required]
         public int Quantity { get; set; }
         public int CategoryId { get; set; }
+        public int BrandId { get; set; }
+        public bool IsActive { get; set; } = true;
         public List<int> DiscountIds { get; set; } = new List<int>();
         public IEnumerable<SelectListItem> Discounts { get; set; } = new List<SelectListItem>();
         public IEnumerable<SelectListItem> Categories { get; set; } = new List<SelectListItem>();

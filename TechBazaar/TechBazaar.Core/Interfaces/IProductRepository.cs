@@ -9,8 +9,9 @@ namespace TechBazaar.Core.Interfaces
 {
     public interface IProductRepository<T> : IBaseRepository<T> where T : Product
     {
-        Task<Product> GetProductByIdAsync(int id);
-        Task<IEnumerable<Product>> GetAllProductsAsync();
+        Task<T> GetProductByIdAsync(int id);
+        Task<IEnumerable<T>> GetAllProductsAsync();
+        Task<T> GetProductByIdWithImages(int id);
 
     }
 }
