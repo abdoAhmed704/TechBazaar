@@ -18,9 +18,6 @@ namespace TechBazaar.Ef
         public DbSet<WishList> WishLists { get; set; }
         public DbSet<WishItem> WishItems { get; set; }
         public DbSet<Review> Reviews { get; set; }
-        public DbSet<ShippingProvider> ShippingProviders { get; set; }
-        public DbSet<Shipment> Shipments { get; set; }
-        public DbSet<ShipmentStatus> shipmentStatuses { get; set; }
 
         public EContext(DbContextOptions<EContext> options):base(options)
         {

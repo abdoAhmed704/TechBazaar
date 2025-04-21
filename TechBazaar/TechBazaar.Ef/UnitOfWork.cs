@@ -9,7 +9,7 @@ namespace TechBazaar.Ef
     {
         private readonly EContext eContext;
 
-        public IBaseRepository<Category> Category { get; private set; }
+        public ICategoryRepository<Category> Category { get; private set; }
 
         public IBaseRepository<Product> Product { get; private set; }
         public IBaseRepository<Discount> Discount { get; private set; }
@@ -21,7 +21,7 @@ namespace TechBazaar.Ef
         public UnitOfWork(EContext eContext)
         {
             this.eContext = eContext;
-            Category = new BaseRepository<Category>(eContext);
+            Category = new CategoryRepository<Category>(eContext);
             Product = new BaseRepository<Product>(eContext);
             Discount = new BaseRepository<Discount>(eContext);
             ProductDiscount = new BaseRepository<ProductDiscount>(eContext);
