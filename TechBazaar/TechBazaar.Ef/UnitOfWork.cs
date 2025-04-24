@@ -17,6 +17,8 @@ namespace TechBazaar.Ef
         public IBaseRepository<Inventory> Inventory { get; private set; }
         public IBaseRepository<Image> Image { get; set; }
         public IBrandRepository<Brand> Brand { get; private set; }
+        public ICartRepository<Cart> Cart { get; private set; }
+        public IWishListRepository<WishList> WishList { get; private set; }
 
         public UnitOfWork(EContext eContext)
         {
@@ -28,6 +30,8 @@ namespace TechBazaar.Ef
             Inventory = new BaseRepository<Inventory>(eContext);
             Image = new BaseRepository<Image>(eContext);
             Brand = new BrandRepository<Brand>(eContext);
+            Cart = new CartRepository<Cart>(eContext);
+            WishList = new WishListRepository<WishList>(eContext);
         }
 
 
