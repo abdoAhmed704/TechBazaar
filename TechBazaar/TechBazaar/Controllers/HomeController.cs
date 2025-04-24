@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using TechBazaar.Core.Interfaces;
+using TechBazaar.Core.Models;
+using TechBazaar.Core.ModelViews;
 
 namespace TechBazaar.Controllers
 {
@@ -11,10 +14,23 @@ namespace TechBazaar.Controllers
         {
             this.unitOfWork = unitOfWork;
         }
-        public IActionResult Index(string sTerm = "", int categoryId = 0, int  brandId = 0)
+        public async Task<IActionResult> Index(string sTerm = "", int categoryId = 0, int  brandId = 0)
         {
+            IEnumerable<Product> products = await unitOfWork.Product.DisplayProducts(sTerm, categoryId, brandId);
+            IEnumerable<Category> categories = await unitOfWork.Category.DisplayCategories();
+            IEnumerable<Brand> brands = await unitOfWork.Brand.DisplayBrands();
 
-            return View();
+            var model = new ProductDisplayModelView
+            {
+                Products = products,
+                Categories = categories,
+                Brands = brands,
+                STerm = sTerm,
+                CategoryId = categoryId,
+                BrandId = brandId
+            };
+
+            return View(model);
         }
     }
 }

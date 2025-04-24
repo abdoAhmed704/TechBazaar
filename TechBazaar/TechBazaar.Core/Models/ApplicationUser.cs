@@ -36,7 +36,7 @@ namespace TechBazaar.Core.Models
         public int PostalCode { get; set; }
 
         // Navigation properties
-        public ICollection<WishList> WishLists { get; set; } = new List<WishList>();
+        public WishList WishList { get; set; }
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<Cart> Carts { get; set; } = new List<Cart>();
     }

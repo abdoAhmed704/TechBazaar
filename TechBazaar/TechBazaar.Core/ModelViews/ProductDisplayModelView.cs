@@ -13,7 +13,7 @@ namespace TechBazaar.Core.ModelViews
         public IEnumerable<Category> Categories { get; set; } = [];
         public IEnumerable<Brand> Brands { get; set; } = [];
 
-        public string SearchTerm { get; set; } = "";
+        public string STerm { get; set; } = "";
         public int CategoryId { get; set; } = 0;
         public int BrandId { get; set; } = 0;
     }

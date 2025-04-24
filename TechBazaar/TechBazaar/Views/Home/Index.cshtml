@@ -1,8 +1,105 @@
-﻿@{
+﻿@model ProductDisplayModelView;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="my-2">
+    <form asp-action="Index" class="row row-cols-lg-auto g-3 align-items-center">
+        <div class="col-12">
+            <label class="visually-hidden" for="genreId">Genres</label>
+            <select class="form-select" id="genreId" name="genreId">
+                <option selected>Category</option>
+                @foreach (var category in Model.Categories)
+                {
+                    <option selected="@(category.Id == Model.CategoryId)" value="@category.Id">@category.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-12">
+            <label class="visually-hidden" for="genreId">Genres</label>
+            <select class="form-select" id="genreId" name="genreId">
+                <option selected>Brand</option>
+                @foreach (var brand in Model.Brands)
+                {
+                    <option selected="@(brand.Id == Model.BrandId)" value="@brand.Id">@brand.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-12">
+            <label class="visually-hidden" for="sterm">Search by title</label>
+            <div class="input-group">
+                <div class="input-group-text"></div>
+                <input class="form-control" asp-for="STerm">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="/Home/Index" class="btn btn-dark">Reset</a>
+        </div>
+    </form>
 </div>
+
+<div class="w-100 mt-4 d-flex flex-wrap ">
+    @foreach (var product in Model.Products)
+    {
+        <div class="card mx-3 mb-4" style="width: 11rem;">
+            @if (string.IsNullOrEmpty(product.Images.First().ImageUrl))
+            {
+                <img style="width:100%;height:180px" src="/images/NoImage.png" class="card-img-top" alt="...">
+
+            }
+            else
+            {
+                <img style="width:100%;height:180px" src="/images/@product.Images.First().ImageUrl" class="card-img-top" alt="...">
+            }
+            <div class="card-body">
+                <h5 class="card-title">@product.Name</h5>
+                <p class="card-text">
+                    <b>Genre: </b>@product.Category <br />
+                    @product.ShortDescription <br />
+                    <b>Price: </b>@product.Price
+                    @* <br/> <b>@book.Quantity</b> *@
+                </p>
+                <button type="button" onclick="add(@product.Id)" class="btn btn-primary"><i class="bi bi-heart-fill"></i></button>
+                @if (product.Inventory.Quantity > 0)
+                {
+                    <button type="button" onclick="add(@product.Id)" class="btn btn-primary">Add to cart</button>
+                }
+                else
+                {
+                    <span style="border: 1px solid;padding: 5px 8px;color: red;border-radius: 5px;">Out of stock</span>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts{
+    <script>
+        async function add(bookId) {
+             var usernameEl = document.getElementById("username");
+        if(usernameEl==null){
+            window.location.href = "/Identity/Account/Login";
+          //var username=usernameEl.innerText;
+          //  if(username.length<1){
+          //      window.location.href="/Identity/Account/Login";
+          //  }
+        }
+            try {
+                var response = await fetch(`/Cart/AddItem?bookId=${bookId}`);
+                if (response.status == 200) {
+                    var result = await response.json();
+                    var cartCountEl = document.getElementById("cartCount");
+                    cartCountEl.innerHTML = result;
+                    window.location.href = "#cartCount";
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+    </script>
+}
