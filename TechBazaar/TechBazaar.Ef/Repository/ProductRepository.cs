@@ -35,6 +35,26 @@ namespace TechBazaar.Ef.Repository
                 Include(p => p.Brand).Where(p => p.DeletedAt == null).ToListAsync();
         }
 
+        public async Task<IEnumerable<T>> DisplayProducts(string sTearm = "",int categoryId = 0,int brandId = 0)
+        {
+            var products = eContext.Set<T>().AsNoTracking().Include(p => p.Category).
+                Include(p => p.Brand).Include(p =>p.Images).
+                Where(p => p.DeletedAt == null && p.IsActive == true);
+            if (!string.IsNullOrEmpty(sTearm))
+            {
+                products = products.Where(p => p.Name.Contains(sTearm));
+            }
+            if (categoryId > 0)
+            {
+                products = products.Where(p => p.CategoryId == categoryId);
+            }
+            if (brandId > 0)
+            {
+                products = products.Where(p => p.BrandId == brandId);
+            }
+            return await products.ToListAsync();
+        }
+
         
     }
 }

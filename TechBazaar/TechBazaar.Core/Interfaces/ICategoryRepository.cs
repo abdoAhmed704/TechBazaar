@@ -13,5 +13,6 @@ namespace TechBazaar.Core.Interfaces
         Task<T> GetCategoryByIdAsync(int id);
         Task<IEnumerable<T>> GetAllCategoriesAsync();
         Task<IEnumerable<SelectListItem>> GetCategoriesToSelectListItem();
+        Task<IEnumerable<T>> DisplayCategories();
     }
 }

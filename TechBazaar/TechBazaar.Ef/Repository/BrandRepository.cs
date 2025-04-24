@@ -27,7 +27,6 @@ namespace TechBazaar.Ef.Repository
         {
             return await eContext.Set<T>().ToListAsync();
         }
-
         public async Task<IEnumerable<SelectListItem>> GetBrandsToSelectListItem()
         {
             return await eContext.Set<T>().Where(b => b.IsActive == true).Select(b => new SelectListItem
@@ -35,6 +34,10 @@ namespace TechBazaar.Ef.Repository
                 Value = b.Id.ToString(),
                 Text = b.Name
             }).ToListAsync();
+        }
+        public async Task<IEnumerable<T>> DisplayBrands()
+        {
+            return await eContext.Set<T>().Where(b => b.IsActive == true).ToListAsync();
         }
     }
 }

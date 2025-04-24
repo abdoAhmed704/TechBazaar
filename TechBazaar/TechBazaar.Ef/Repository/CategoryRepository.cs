@@ -33,5 +33,9 @@ namespace TechBazaar.Ef.Repository
                 Text = c.Name
             }).ToListAsync();
         }
+        public async Task<IEnumerable<T>> DisplayCategories()
+        {
+            return await eContext.Set<T>().Where(c => c.IsActive == true).ToListAsync();
+        }
     }
 }

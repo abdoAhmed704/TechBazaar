@@ -33,7 +33,18 @@
                         }
                     </ul>
                     <ul class="navbar-nav flex-grow-3 me-0">
-
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="WishList" asp-action="GetUserWishList">
+                                <span id="wishListCount">0</span>
+                                <i class="bi bi-bag-heart-fill"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Cart" asp-action="GetUserCart">
+                                <span id="cartCount">0</span>
+                                <i class="bi bi-cart3"></i>
+                            </a>
+                        </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">

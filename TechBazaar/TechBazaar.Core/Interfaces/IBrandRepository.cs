@@ -13,6 +13,7 @@ namespace TechBazaar.Core.Interfaces
         Task<T> GetBrandByIdAsync(int id);
         Task<IEnumerable<T>> GetAllBrandsAsync();
         Task<IEnumerable<SelectListItem>> GetBrandsToSelectListItem();
+        Task<IEnumerable<T>> DisplayBrands();
 
     }
 }
