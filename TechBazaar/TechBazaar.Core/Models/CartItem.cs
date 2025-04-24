@@ -18,6 +18,9 @@ namespace TechBazaar.Core.Models
         public decimal Price { get; set; }
 
         [Required]
+        public decimal PriceAfterDiscount { get; set; }
+
+        [Required]
         public int Quantity { get; set; }
 
         public Cart? Cart { get; set; }
@@ -25,7 +28,7 @@ namespace TechBazaar.Core.Models
 
         public decimal TotalPrice()
         {
-            return Price * Quantity;
+            return PriceAfterDiscount * Quantity;
         }
     }
 }

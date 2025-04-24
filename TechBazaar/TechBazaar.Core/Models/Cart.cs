@@ -18,6 +18,8 @@ namespace TechBazaar.Core.Models
         [Required]
         public CartStatus Status { get; set; }
 
+        public string RefNumber { get; set; } =  Guid.NewGuid().ToString();
+
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
