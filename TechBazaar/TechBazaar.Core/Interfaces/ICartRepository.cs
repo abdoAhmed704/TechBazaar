@@ -9,5 +9,9 @@ namespace TechBazaar.Core.Interfaces
 {
     public interface ICartRepository<T> : IBaseRepository<T> where T : Cart
     {
+        Task AddToCart(int productId, int quantity);
+        Task RemoveFromCart(int productId);
+        Task<T> GetUserCart();
+        Task<T> GetCart(string userId);
     }
 }
