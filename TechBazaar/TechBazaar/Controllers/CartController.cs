@@ -30,5 +30,10 @@ namespace TechBazaar.Controllers
             await unitOfWork.Cart.RemoveFromCart(productId);
             return RedirectToAction("GetUserCart");
         }
+
+        public async Task<IActionResult> GetTotalItemInCart()
+        {
+
+        }
     }
 }

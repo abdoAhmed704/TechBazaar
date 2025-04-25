@@ -38,7 +38,7 @@ namespace TechBazaar.Ef.Repository
         public async Task<IEnumerable<T>> DisplayProducts(string sTearm = "",int categoryId = 0,int brandId = 0)
         {
             var products = eContext.Set<T>().AsNoTracking().Include(p => p.Category).
-                Include(p => p.Brand).Include(p =>p.Images).
+                Include(p => p.Brand).Include(p =>p.Images).Include(p=>p.Inventory).
                 Where(p => p.DeletedAt == null && p.IsActive == true);
             if (!string.IsNullOrEmpty(sTearm))
             {

@@ -24,6 +24,13 @@ namespace TechBazaar.Ef.Repository
             this.httpContextAccessor = httpContextAccessor;
             this.userManager = userManager;
         }
+        public async Task<int> GetTotalItemInCart()
+        {
+            var userId = GetUserId();
+            var cart = await eContext.Set<T>().Include(c => c.CartItems).FirstOrDefaultAsync(c => c.UserId == userId);
+            var cartItemsCount = cart?.CartItems.Count();
+            return cartItemsCount ?? 0;
+        }
         public async Task AddToCart(int productId,int quantity)
         {
             var userId = GetUserId();

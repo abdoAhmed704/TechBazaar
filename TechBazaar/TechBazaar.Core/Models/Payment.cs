@@ -15,6 +15,8 @@ namespace TechBazaar.Core.Models
         public int PaymentMethodId { get; set; }
 
         public decimal Amount { get; set; }
+        // public string Comission { get; set; }
+
 
         public PaymentMethod? PaymentMethod { get; set; }
         public Cart? Cart { get; set; }
