@@ -27,7 +27,11 @@ namespace TechBazaar.Ef.Repository
         public async Task AddToCart(int productId,int quantity)
         {
             var userId = GetUserId();
-            
+            var product = eContext.Products.FirstOrDefaultAsync(p => p.Id == productId && p.Inventory.Quantity >= 0);
+            if (product == null)
+            {
+                throw new Exception("Product not found or insufficient inventory");
+            }
             var cart = await eContext.Set<T>().Include(c => c.CartItems).
                 FirstOrDefaultAsync(c => c.UserId == userId && c.IsActive && c.Status == CartStatus.Active);
             if (cart == null)
@@ -37,6 +41,7 @@ namespace TechBazaar.Ef.Repository
                     UserId = userId,
                     CreatedAt = DateTime.Now,
                     Status = CartStatus.Active,
+                    RefNumber = Guid.NewGuid().ToString(),
                     IsActive = true
                 };
                 newCart.CartItems.Add(new CartItem { ProductId = productId, Quantity = quantity });

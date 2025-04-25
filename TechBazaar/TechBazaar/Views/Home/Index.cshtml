@@ -79,27 +79,26 @@
 
 @section Scripts{
     <script>
-        async function add(bookId) {
-             var usernameEl = document.getElementById("username");
-        if(usernameEl==null){
-            window.location.href = "/Identity/Account/Login";
-          //var username=usernameEl.innerText;
-          //  if(username.length<1){
-          //      window.location.href="/Identity/Account/Login";
-          //  }
+        async function add(productId) {
+             var username = document.getElementById("username");
+        if(username == null){
+            window.location.href = "/Account/Login";
         }
-            try {
-                var response = await fetch(`/Cart/AddItem?bookId=${bookId}`);
-                if (response.status == 200) {
-                    var result = await response.json();
-                    var cartCountEl = document.getElementById("cartCount");
-                    cartCountEl.innerHTML = result;
-                    window.location.href = "#cartCount";
-                }
+        $.ajax({
+            url: '/cart/addtocart',
+            type: 'POST',
+            contentType: 'application/json',
+            data: {
+                productId: `${productId}`,
+                quantity: 1
+            },
+            success: function() {
+                alert("Product Have been added to the cart");
+            },
+            error: function(xhr, status, error) {
+             alert("not enough stock");
             }
-            catch (err) {
-                console.log(err);
-            }
+        });
         }
     </script>
 }

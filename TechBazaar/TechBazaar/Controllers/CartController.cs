@@ -13,9 +13,22 @@ namespace TechBazaar.Controllers
             this.unitOfWork = unitOfWork;
         }
 
-        public IActionResult Index()
+        public IActionResult GetUserCart()
         {
             return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddToCart(int productId, int quantity)
+        {
+            await unitOfWork.Cart.AddToCart(productId, quantity);
+            return NoContent();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveFromCart(int productId)
+        {
+            await unitOfWork.Cart.RemoveFromCart(productId);
+            return RedirectToAction("GetUserCart");
         }
     }
 }
