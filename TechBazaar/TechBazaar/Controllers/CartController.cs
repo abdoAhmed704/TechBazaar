@@ -12,6 +12,7 @@ namespace TechBazaar.Controllers
         {
             this.unitOfWork = unitOfWork;
         }
+
         public IActionResult Index()
         {
             return View();
