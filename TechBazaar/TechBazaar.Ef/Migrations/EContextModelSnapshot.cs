@@ -308,6 +308,10 @@ namespace TechBazaar.Ef.Migrations
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("RefNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -337,6 +341,9 @@ namespace TechBazaar.Ef.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PriceAfterDiscount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductId")
@@ -481,46 +488,22 @@ namespace TechBazaar.Ef.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("CVV")
-                        .IsRequired()
-                        .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)");
-
-                    b.Property<int>("CardNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("int");
-
-                    b.Property<string>("ExpireDate")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("StatusId")
+                    b.Property<int>("PaymentMethodId")
                         .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("StatusId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("PaymentMethodId");
 
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("TechBazaar.Core.Models.PaymentStatus", b =>
+            modelBuilder.Entity("TechBazaar.Core.Models.PaymentMethod", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -528,14 +511,26 @@ namespace TechBazaar.Ef.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Comission")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentStatuses");
+                    b.ToTable("PaymentMethod");
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Product", b =>
@@ -701,7 +696,8 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("WishLists");
                 });
@@ -817,21 +813,15 @@ namespace TechBazaar.Ef.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TechBazaar.Core.Models.PaymentStatus", "PaymentStatus")
+                    b.HasOne("TechBazaar.Core.Models.PaymentMethod", "PaymentMethod")
                         .WithMany("Payments")
-                        .HasForeignKey("StatusId")
+                        .HasForeignKey("PaymentMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TechBazaar.Core.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("ApplicationUser");
-
                     b.Navigation("Cart");
 
-                    b.Navigation("PaymentStatus");
+                    b.Navigation("PaymentMethod");
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Product", b =>
@@ -913,8 +903,8 @@ namespace TechBazaar.Ef.Migrations
             modelBuilder.Entity("TechBazaar.Core.Models.WishList", b =>
                 {
                     b.HasOne("TechBazaar.Core.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("WishLists")
-                        .HasForeignKey("UserId")
+                        .WithOne("WishList")
+                        .HasForeignKey("TechBazaar.Core.Models.WishList", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -927,7 +917,8 @@ namespace TechBazaar.Ef.Migrations
 
                     b.Navigation("Reviews");
 
-                    b.Navigation("WishLists");
+                    b.Navigation("WishList")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Brand", b =>
@@ -950,7 +941,7 @@ namespace TechBazaar.Ef.Migrations
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("TechBazaar.Core.Models.PaymentStatus", b =>
+            modelBuilder.Entity("TechBazaar.Core.Models.PaymentMethod", b =>
                 {
                     b.Navigation("Payments");
                 });

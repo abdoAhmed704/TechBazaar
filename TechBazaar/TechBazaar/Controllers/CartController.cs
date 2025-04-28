@@ -17,10 +17,15 @@ namespace TechBazaar.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> AddToCart(int productId, int quantity)
         {
-            await unitOfWork.Cart.AddToCart(productId, quantity);
+            var result = await unitOfWork.Cart.AddToCart(productId, quantity);
+            if(result == false)
+            {
+                return BadRequest("Product not available or invalid quantity.");
+            }
             return NoContent();
         }
 
@@ -33,7 +38,8 @@ namespace TechBazaar.Controllers
 
         public async Task<IActionResult> GetTotalItemInCart()
         {
-
+            var cartItemCount = await unitOfWork.Cart.GetTotalItemInCart();
+            return Ok(cartItemCount);
         }
     }
 }

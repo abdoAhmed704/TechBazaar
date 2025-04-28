@@ -27,20 +27,20 @@ namespace TechBazaar.Ef.Repository
         public async Task<int> GetTotalItemInCart()
         {
             var userId = GetUserId();
-            var cart = await eContext.Set<T>().Include(c => c.CartItems).FirstOrDefaultAsync(c => c.UserId == userId);
+            var cart = await eContext.Set<T>().Include(c => c.CartItems).FirstOrDefaultAsync(c => c.UserId == userId && c.Status == CartStatus.Active && c.IsActive);
             var cartItemsCount = cart?.CartItems.Count();
             return cartItemsCount ?? 0;
         }
-        public async Task AddToCart(int productId,int quantity)
+        public async Task<bool> AddToCart(int productId,int quantity)
         {
             var userId = GetUserId();
-            var product = eContext.Products.FirstOrDefaultAsync(p => p.Id == productId && p.Inventory.Quantity >= 0);
+            var product = await eContext.Products.FirstOrDefaultAsync(p => p.Id == productId && p.Inventory.Quantity >= quantity);
             if (product == null)
             {
-                throw new Exception("Product not found or insufficient inventory");
+                return false;
             }
-            var cart = await eContext.Set<T>().Include(c => c.CartItems).
-                FirstOrDefaultAsync(c => c.UserId == userId && c.IsActive && c.Status == CartStatus.Active);
+            Cart cart =  eContext.Carts.FirstOrDefault(c => c.UserId == userId && c.IsActive && c.Status == CartStatus.Active);
+                
             if (cart == null)
             {
                 var newCart = new Cart
@@ -52,7 +52,7 @@ namespace TechBazaar.Ef.Repository
                     IsActive = true
                 };
                 newCart.CartItems.Add(new CartItem { ProductId = productId, Quantity = quantity });
-                await eContext.Set<T>().AddAsync(cart);
+                await eContext.Carts.AddAsync(cart);
             }
             else
             {
@@ -63,10 +63,11 @@ namespace TechBazaar.Ef.Repository
                 }
                 else
                 {
-                    cart.CartItems.Add(new CartItem { ProductId = productId, Quantity = quantity });
+                    cart.CartItems.Add(new CartItem { ProductId = productId, Quantity = quantity ,Price = product.Price });
                 }
             }
             await eContext.SaveChangesAsync();
+            return true;
         }
         public async Task RemoveFromCart(int productId)
         {

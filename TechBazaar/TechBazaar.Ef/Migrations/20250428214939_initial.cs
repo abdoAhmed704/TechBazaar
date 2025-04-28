@@ -98,16 +98,20 @@ namespace TechBazaar.Ef.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentStatuses",
+                name: "PaymentMethod",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Comission = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PaymentStatuses", x => x.Id);
+                    table.PrimaryKey("PK_PaymentMethod", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -245,6 +249,7 @@ namespace TechBazaar.Ef.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
+                    RefNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
@@ -322,23 +327,13 @@ namespace TechBazaar.Ef.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     OrderId = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false),
-                    PaymentMethod = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CardNumber = table.Column<int>(type: "int", maxLength: 20, nullable: false),
-                    ExpireDate = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    CVV = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false)
+                    PaymentMethodId = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Payments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Payments_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Payments_Carts_OrderId",
                         column: x => x.OrderId,
@@ -346,9 +341,9 @@ namespace TechBazaar.Ef.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Payments_PaymentStatuses_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "PaymentStatuses",
+                        name: "FK_Payments_PaymentMethod_PaymentMethodId",
+                        column: x => x.PaymentMethodId,
+                        principalTable: "PaymentMethod",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -362,6 +357,7 @@ namespace TechBazaar.Ef.Migrations
                     CartId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PriceAfterDiscount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -569,14 +565,9 @@ namespace TechBazaar.Ef.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_StatusId",
+                name: "IX_Payments_PaymentMethodId",
                 table: "Payments",
-                column: "StatusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Payments_UserId",
-                table: "Payments",
-                column: "UserId");
+                column: "PaymentMethodId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductDiscount_DiscountId",
@@ -627,7 +618,8 @@ namespace TechBazaar.Ef.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_WishLists_UserId",
                 table: "WishLists",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -676,7 +668,7 @@ namespace TechBazaar.Ef.Migrations
                 name: "Carts");
 
             migrationBuilder.DropTable(
-                name: "PaymentStatuses");
+                name: "PaymentMethod");
 
             migrationBuilder.DropTable(
                 name: "ProductDiscounts");
