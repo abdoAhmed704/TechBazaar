@@ -9,8 +9,8 @@ namespace TechBazaar.Ef
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<Inventory> ProductInventories { get; set; }
-        public DbSet<Discount> ProductDiscounts { get; set; }
+        public DbSet<Inventory> Inventories { get; set; }
+        public DbSet<Discount> Discounts { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Payment> Payments { get; set; }
