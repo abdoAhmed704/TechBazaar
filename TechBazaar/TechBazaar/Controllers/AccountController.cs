@@ -44,6 +44,17 @@ namespace TechBazaar.Controllers
                 UserName = user.UserName,
                 Email = user.Email,
                 CreatedAt = DateTime.UtcNow,
+                IsActive = true,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PhoneNumber = user.PhoneNumber,
+                Street = user.Street,
+                BuldingNo = user.BuldingNo,
+                Floor = user.Floor,
+                AppartmentNo = user.AppartmentNo,
+                City = user.City,
+                Country = user.Country,
+                PostalCode = user.PostalCode,
             };
 
 

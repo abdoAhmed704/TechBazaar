@@ -32,8 +32,9 @@ namespace TechBazaar.Core.Models
         [StringLength(50)]
         public string? Country { get; set; }
 
+        
         [StringLength(20)]
-        public int PostalCode { get; set; }
+        public string PostalCode { get; set; }
 
         // Navigation properties
         public WishList WishList { get; set; }
