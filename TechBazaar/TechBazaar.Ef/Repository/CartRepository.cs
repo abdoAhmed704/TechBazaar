@@ -105,9 +105,15 @@ namespace TechBazaar.Ef.Repository
         public async Task<T> GetUserCart() {
             var userId = GetUserId();
 
-            var cart = await eContext.Set<T>().Include(c => c.CartItems).
-                FirstOrDefaultAsync(c => c.UserId == userId && c.IsActive);
-           
+            var cart = await eContext.Set<T>()
+    .Include(c => c.CartItems)
+        .ThenInclude(ci => ci.Product)
+            .ThenInclude(p => p.Inventory)
+        .Include(c => c.CartItems)
+            .ThenInclude(ci => ci.Product)
+                .ThenInclude(p => p.Category)
+    .FirstOrDefaultAsync(c => c.UserId == userId && c.IsActive);
+
             return cart;
         }
 

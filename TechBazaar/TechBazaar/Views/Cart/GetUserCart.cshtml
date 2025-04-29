@@ -12,14 +12,14 @@
             <tr>
                 <th>Product</th>
                 <th>Category</th>
-                <th>Total Price</th>
+                <th colspan="2">Total Price</th>
                 <th>Action</th>
             </tr>
             @foreach (var item in Model.CartItems)
             {
                 <tr>
-                    <td></td>
-                    <td></td>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Product.Category.Name</td>
                     <td>@item.PriceAfterDiscount X @item.Quantity</td>
                     <td>@(item.PriceAfterDiscount * item.Quantity)</td>
                     <td>
