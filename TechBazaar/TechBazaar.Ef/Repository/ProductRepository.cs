@@ -54,7 +54,12 @@ namespace TechBazaar.Ef.Repository
             }
             return await products.ToListAsync();
         }
+        public async Task<IEnumerable<int>> GetProductDiscountsAsync(int productId)
+        {
+            var discounts = await eContext.Set<ProductDiscount>().Include(p => p.Discount).Where(p => p.ProductId == productId && p.Discount.IsActive == true).Select(p => p.DiscountId).ToListAsync();
+            return discounts;
+        }
 
-        
+
     }
 }

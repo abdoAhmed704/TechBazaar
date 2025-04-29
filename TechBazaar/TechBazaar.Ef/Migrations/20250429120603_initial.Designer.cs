@@ -12,8 +12,8 @@ using TechBazaar.Ef;
 namespace TechBazaar.Ef.Migrations
 {
     [DbContext(typeof(EContext))]
-    [Migration("20250428215935_updateUser")]
-    partial class updateUser
+    [Migration("20250429120603_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -433,7 +433,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductDiscounts");
+                    b.ToTable("Discounts");
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Image", b =>
@@ -478,7 +478,7 @@ namespace TechBazaar.Ef.Migrations
                     b.HasIndex("ProductId")
                         .IsUnique();
 
-                    b.ToTable("ProductInventories");
+                    b.ToTable("Inventories");
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Payment", b =>

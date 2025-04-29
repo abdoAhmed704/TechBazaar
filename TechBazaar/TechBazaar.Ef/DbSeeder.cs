@@ -46,6 +46,16 @@ namespace TechBazaar.Ef
                     LastName = "",
                     EmailConfirmed = true,
                     PhoneNumber = " ",
+                    Street = "",
+                    Floor = 0,
+                    BuldingNo = 0,
+                    AppartmentNo = 0,
+                    City = "",
+                    Country = "",
+                    PostalCode = "",
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true,
+
                 };
 
                 var userInDb = await usermanage.FindByEmailAsync(Admin.Email);

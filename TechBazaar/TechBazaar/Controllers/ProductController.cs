@@ -77,7 +77,7 @@ namespace TechBazaar.Controllers
                 product.Inventory.Quantity = model.Quantity;
 
                 // Handle discounts
-                if (model.DiscountIds != null && model.DiscountIds.Count > 0)
+                if (model.DiscountIds != null && model.DiscountIds.Any())
                 {
                     foreach (var discountId in model.DiscountIds)
                     {
@@ -155,6 +155,7 @@ namespace TechBazaar.Controllers
                 Price = product.Price,
                 CategoryId = product.CategoryId,
                 BrandId = product.BrandId,
+                DiscountIds = await unitOfWork.Product.GetProductDiscountsAsync(product.Id),
                 Categories = await unitOfWork.Category.GetCategoriesToSelectListItem(),
                 Brands = await unitOfWork.Brand.GetBrandsToSelectListItem(),
                 Discounts = await unitOfWork.Discount.GetDiscountsToSelectListItem(),

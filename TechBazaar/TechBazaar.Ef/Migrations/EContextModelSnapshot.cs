@@ -430,7 +430,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductDiscounts");
+                    b.ToTable("Discounts");
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Image", b =>
@@ -475,7 +475,7 @@ namespace TechBazaar.Ef.Migrations
                     b.HasIndex("ProductId")
                         .IsUnique();
 
-                    b.ToTable("ProductInventories");
+                    b.ToTable("Inventories");
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Payment", b =>

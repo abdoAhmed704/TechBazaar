@@ -34,7 +34,25 @@ namespace TechBazaar.Ef.Repository
         public async Task<bool> AddToCart(int productId,int quantity)
         {
             var userId = GetUserId();
-            var product = await eContext.Products.FirstOrDefaultAsync(p => p.Id == productId && p.Inventory.Quantity >= quantity);
+            var product = await eContext.Products.Include(p => p.ProductDiscounts).ThenInclude(pd => pd.Discount)
+                .FirstOrDefaultAsync(p => p.Id == productId && p.Inventory.Quantity >= quantity);
+            decimal productPrice = product.Price;
+            // Add Discount to the product price
+            foreach(var productDiscount in product.ProductDiscounts)
+            {
+                var discount = productDiscount.Discount;
+                if (discount != null && discount.IsActive) 
+                {
+                    if (discount.Type == DicscountType.Percentage)
+                    {
+                        productPrice -= productPrice * ((discount.Value / 100)* 100);
+                    }
+                    else if (discount.Type == DicscountType.Fixed)
+                    {
+                        productPrice -= discount.Value;
+                    }
+                }
+            }
             if (product == null)
             {
                 return false;
@@ -51,8 +69,8 @@ namespace TechBazaar.Ef.Repository
                     RefNumber = Guid.NewGuid().ToString(),
                     IsActive = true
                 };
-                newCart.CartItems.Add(new CartItem { ProductId = productId, Quantity = quantity });
-                await eContext.Carts.AddAsync(cart);
+                newCart.CartItems.Add(new CartItem { ProductId = productId, Quantity = quantity,Price = product.Price,PriceAfterDiscount = productPrice });
+                eContext.Carts.Add(newCart);
             }
             else
             {
@@ -63,7 +81,7 @@ namespace TechBazaar.Ef.Repository
                 }
                 else
                 {
-                    cart.CartItems.Add(new CartItem { ProductId = productId, Quantity = quantity ,Price = product.Price });
+                    cart.CartItems.Add(new CartItem { ProductId = productId, Quantity = quantity ,Price = product.Price,PriceAfterDiscount = productPrice});
                 }
             }
             await eContext.SaveChangesAsync();

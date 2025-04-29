@@ -41,7 +41,7 @@ namespace TechBazaar.Ef.Migrations
                     AppartmentNo = table.Column<int>(type: "int", nullable: false),
                     City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    PostalCode = table.Column<int>(type: "int", maxLength: 20, nullable: false),
+                    PostalCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -98,24 +98,7 @@ namespace TechBazaar.Ef.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentMethod",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Comission = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PaymentMethod", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductDiscounts",
+                name: "Discounts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -131,7 +114,24 @@ namespace TechBazaar.Ef.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductDiscounts", x => x.Id);
+                    table.PrimaryKey("PK_Discounts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PaymentMethod",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Comission = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PaymentMethod", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -398,6 +398,26 @@ namespace TechBazaar.Ef.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Inventories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inventories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Inventories_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductDiscount",
                 columns: table => new
                 {
@@ -410,33 +430,13 @@ namespace TechBazaar.Ef.Migrations
                 {
                     table.PrimaryKey("PK_ProductDiscount", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductDiscount_ProductDiscounts_DiscountId",
+                        name: "FK_ProductDiscount_Discounts_DiscountId",
                         column: x => x.DiscountId,
-                        principalTable: "ProductDiscounts",
+                        principalTable: "Discounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ProductDiscount_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductInventories",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductInventories", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductInventories_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -560,6 +560,12 @@ namespace TechBazaar.Ef.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Inventories_ProductId",
+                table: "Inventories",
+                column: "ProductId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Payments_OrderId",
                 table: "Payments",
                 column: "OrderId");
@@ -578,12 +584,6 @@ namespace TechBazaar.Ef.Migrations
                 name: "IX_ProductDiscount_ProductId",
                 table: "ProductDiscount",
                 column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductInventories_ProductId",
-                table: "ProductInventories",
-                column: "ProductId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_BrandId",
@@ -647,13 +647,13 @@ namespace TechBazaar.Ef.Migrations
                 name: "Image");
 
             migrationBuilder.DropTable(
+                name: "Inventories");
+
+            migrationBuilder.DropTable(
                 name: "Payments");
 
             migrationBuilder.DropTable(
                 name: "ProductDiscount");
-
-            migrationBuilder.DropTable(
-                name: "ProductInventories");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
@@ -671,7 +671,7 @@ namespace TechBazaar.Ef.Migrations
                 name: "PaymentMethod");
 
             migrationBuilder.DropTable(
-                name: "ProductDiscounts");
+                name: "Discounts");
 
             migrationBuilder.DropTable(
                 name: "Products");

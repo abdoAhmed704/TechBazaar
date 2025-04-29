@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Numerics;
+using System.Threading.Tasks;
 using TechBazaar.Core.Interfaces;
 
 namespace TechBazaar.Controllers
@@ -13,9 +14,10 @@ namespace TechBazaar.Controllers
             this.unitOfWork = unitOfWork;
         }
 
-        public IActionResult GetUserCart()
+        public async Task<IActionResult> GetUserCart()
         {
-            return View();
+            var cart = await unitOfWork.Cart.GetUserCart();
+            return View(cart);
         }
 
         [HttpPost]
