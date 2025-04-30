@@ -19,19 +19,20 @@ namespace TechBazaar.Controllers
             var cart = await unitOfWork.Cart.GetUserCart();
             return View(cart);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> AddToCart(int productId, int quantity)
+        public async Task<IActionResult> AddToCart(int productId, int quantity,int redirect = 0)
         {
             var result = await unitOfWork.Cart.AddToCart(productId, quantity);
             if(result == false)
             {
                 return BadRequest("Product not available or invalid quantity.");
             }
+            if(redirect == 1)
+            {
+                return RedirectToAction("GetUserCart");
+            }
             return NoContent();
         }
 
-        [HttpPost]
         public async Task<IActionResult> RemoveFromCart(int productId)
         {
             await unitOfWork.Cart.RemoveFromCart(productId);

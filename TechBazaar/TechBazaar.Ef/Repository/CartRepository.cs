@@ -57,7 +57,7 @@ namespace TechBazaar.Ef.Repository
             {
                 return false;
             }
-            Cart cart =  eContext.Carts.FirstOrDefault(c => c.UserId == userId && c.IsActive && c.Status == CartStatus.Active);
+            Cart cart =  eContext.Carts.Include(c => c.CartItems).FirstOrDefault(c => c.UserId == userId && c.IsActive && c.Status == CartStatus.Active);
                 
             if (cart == null)
             {
@@ -94,12 +94,25 @@ namespace TechBazaar.Ef.Repository
                 FirstOrDefaultAsync(c => c.UserId == userId && c.IsActive && c.Status == CartStatus.Active);
             if (cart != null)
             {
+                var product = await eContext.Products.FirstOrDefaultAsync(p => p.Id == productId);
                 var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
-                if (cartItem != null)
+                if (cartItem != null && cartItem.Quantity > 1)
                 {
+                    product.Inventory.Quantity += 1;
+                    cartItem.Quantity -=1;
+                    eContext.Products.Update(product);
+                    eContext.CartItems.Update(cartItem);
+                    await eContext.SaveChangesAsync();
+                }
+                else
+                {
+                    product.Inventory.Quantity += 1;
+                    eContext.Products.Update(product);
+
                     cart.CartItems.Remove(cartItem);
                     await eContext.SaveChangesAsync();
                 }
+
             }
         }
         public async Task<T> GetUserCart() {
