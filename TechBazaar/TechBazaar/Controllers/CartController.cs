@@ -24,7 +24,7 @@ namespace TechBazaar.Controllers
             var result = await unitOfWork.Cart.AddToCart(productId, quantity);
             if(result == false)
             {
-                return BadRequest("Product not available or invalid quantity.");
+                return RedirectToAction("GetUserCart");
             }
             if(redirect == 1)
             {

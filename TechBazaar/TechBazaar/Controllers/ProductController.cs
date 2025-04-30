@@ -190,6 +190,7 @@ namespace TechBazaar.Controllers
                     product.Price = model.Price;
                     product.CategoryId = model.CategoryId;
                     product.BrandId = model.BrandId;
+                    product.IsActive = model.IsActive;
 
                     // Handle discounts
                     var currentDicounts = unitOfWork.ProductDiscount.GetAll(p => p.ProductId == product.Id).ToList();

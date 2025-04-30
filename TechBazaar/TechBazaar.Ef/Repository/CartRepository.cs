@@ -36,7 +36,14 @@ namespace TechBazaar.Ef.Repository
             var userId = GetUserId();
             var product = await eContext.Products.Include(p => p.ProductDiscounts).ThenInclude(pd => pd.Discount)
                 .FirstOrDefaultAsync(p => p.Id == productId && p.Inventory.Quantity >= quantity);
+
+            if (product == null)
+            {
+                return false;
+            }
+
             decimal productPrice = product.Price;
+
             // Add Discount to the product price
             foreach(var productDiscount in product.ProductDiscounts)
             {
@@ -53,10 +60,7 @@ namespace TechBazaar.Ef.Repository
                     }
                 }
             }
-            if (product == null)
-            {
-                return false;
-            }
+
             Cart cart =  eContext.Carts.Include(c => c.CartItems).FirstOrDefault(c => c.UserId == userId && c.IsActive && c.Status == CartStatus.Active);
                 
             if (cart == null)
@@ -75,8 +79,11 @@ namespace TechBazaar.Ef.Repository
             else
             {
                 var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
+                
+
                 if (cartItem != null)
                 {
+                    //if (product.Inventory.Quantity < (cartItem.Quantity += quantity)) return false;
                     cartItem.Quantity += quantity;
                 }
                 else
@@ -94,21 +101,15 @@ namespace TechBazaar.Ef.Repository
                 FirstOrDefaultAsync(c => c.UserId == userId && c.IsActive && c.Status == CartStatus.Active);
             if (cart != null)
             {
-                var product = await eContext.Products.FirstOrDefaultAsync(p => p.Id == productId);
                 var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
                 if (cartItem != null && cartItem.Quantity > 1)
                 {
-                    product.Inventory.Quantity += 1;
                     cartItem.Quantity -=1;
-                    eContext.Products.Update(product);
                     eContext.CartItems.Update(cartItem);
                     await eContext.SaveChangesAsync();
                 }
                 else
                 {
-                    product.Inventory.Quantity += 1;
-                    eContext.Products.Update(product);
-
                     cart.CartItems.Remove(cartItem);
                     await eContext.SaveChangesAsync();
                 }
@@ -119,13 +120,13 @@ namespace TechBazaar.Ef.Repository
             var userId = GetUserId();
 
             var cart = await eContext.Set<T>()
-    .Include(c => c.CartItems)
-        .ThenInclude(ci => ci.Product)
-            .ThenInclude(p => p.Inventory)
-        .Include(c => c.CartItems)
-            .ThenInclude(ci => ci.Product)
-                .ThenInclude(p => p.Category)
-    .FirstOrDefaultAsync(c => c.UserId == userId && c.IsActive);
+                     .Include(c => c.CartItems)
+                     .ThenInclude(ci => ci.Product)
+                     .ThenInclude(p => p.Inventory)
+                     .Include(c => c.CartItems)
+                     .ThenInclude(ci => ci.Product)
+                     .ThenInclude(p => p.Category)
+                     .FirstOrDefaultAsync(c => c.UserId == userId && c.IsActive);
 
             return cart;
         }
