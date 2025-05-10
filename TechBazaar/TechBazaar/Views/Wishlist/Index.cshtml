@@ -1,33 +1,51 @@
-﻿@model IEnumerable<TechBazaar.Core.Models.WishList>
+﻿@model TechBazaar.Core.Models.WishList
 
-<h2>Wish Lists</h2>
+@{
+    ViewData["Title"] = "Wish List";
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>User</th>
-            <th>Created</th>
-            <th>Modified</th>
-            <th>Is Active</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<h1>Your Wish List</h1>
+
+@if (Model.WishItems.Any())
+{
+    <table class="table">
+        <thead>
             <tr>
-                <td>@item.ApplicationUser?.UserName</td>
-                <td>@item.CreatedAt</td>
-                <td>@item.ModifiedAt</td>
-                <td>@item.IsActive</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                <th>Image</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.WishItems)
+            {
+                <tr>
+                    <td>
+                        @if (item.Product.Images.Any())
+                        {
+                            <img src="@item.Product.Images.First().ImageUrl" alt="@item.Product.Name" style="width: 50px;" />
+                        }
+                    </td>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Product.Price</td>
+                    <td>@item.Quantity</td>
+                    <td>
+                        <form asp-action="RemoveFromWishList" method="post">
+                            <input type="hidden" name="wishItemId" value="@item.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                            <a href="@Url.Action("AddToCart", "Cart", new { productId = item.ProductId, quantity = item.Quantity })" class="btn btn-primary btn-sm">Add to Cart</a>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Your wish list is empty.</p>
+}
 
-<a asp-action="Create">Create New</a>
+<a asp-controller="Home" asp-action="Index" class="btn btn-primary">Continue Shopping</a>
