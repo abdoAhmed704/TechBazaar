@@ -289,7 +289,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brand");
+                    b.ToTable("Brand", (string)null);
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Cart", b =>
@@ -327,7 +327,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.CartItem", b =>
@@ -359,7 +359,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Category", b =>
@@ -391,7 +391,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Discount", b =>
@@ -430,7 +430,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Discounts");
+                    b.ToTable("Discounts", (string)null);
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Image", b =>
@@ -452,7 +452,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Image");
+                    b.ToTable("Image", (string)null);
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Inventory", b =>
@@ -475,7 +475,7 @@ namespace TechBazaar.Ef.Migrations
                     b.HasIndex("ProductId")
                         .IsUnique();
 
-                    b.ToTable("Inventories");
+                    b.ToTable("Inventories", (string)null);
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Payment", b =>
@@ -501,7 +501,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasIndex("PaymentMethodId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.PaymentMethod", b =>
@@ -531,7 +531,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethod");
+                    b.ToTable("PaymentMethod", (string)null);
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Product", b =>
@@ -584,7 +584,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.ProductDiscount", b =>
@@ -607,7 +607,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductDiscount");
+                    b.ToTable("ProductDiscount", (string)null);
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.Review", b =>
@@ -645,7 +645,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.WishItem", b =>
@@ -671,7 +671,7 @@ namespace TechBazaar.Ef.Migrations
 
                     b.HasIndex("WishId");
 
-                    b.ToTable("WishItems");
+                    b.ToTable("WishItems", (string)null);
                 });
 
             modelBuilder.Entity("TechBazaar.Core.Models.WishList", b =>
@@ -700,7 +700,7 @@ namespace TechBazaar.Ef.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("WishLists");
+                    b.ToTable("WishLists", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

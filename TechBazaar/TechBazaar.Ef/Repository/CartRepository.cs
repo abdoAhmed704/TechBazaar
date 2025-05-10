@@ -148,5 +148,10 @@ namespace TechBazaar.Ef.Repository
             }
             return userId;
         }
+
+        public Task GetTotalItemInWishList()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

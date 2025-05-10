@@ -1,0 +1,21 @@
+﻿@model TechBazaar.Core.Models.WishList
+
+<h2>Wishlist Details</h2>
+
+<div>
+    <h4>User: @Model.ApplicationUser?.UserName</h4>
+    <p>Created: @Model.CreatedAt</p>
+    <p>Modified: @Model.ModifiedAt</p>
+    <p>Active: @Model.IsActive</p>
+</div>
+
+<h4>Items:</h4>
+<ul>
+    @foreach (var item in Model.WishItems)
+    {
+        <li>@item.Product.Name (Qty: @item.Quantity)</li>
+    }
+</ul>
+
+<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+<a asp-action="Index">Back to List</a>

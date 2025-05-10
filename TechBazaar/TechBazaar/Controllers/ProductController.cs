@@ -300,6 +300,16 @@ namespace TechBazaar.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> DisplayProduct(int id)
+        {
+            var detailsProduct = await unitOfWork.Product
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (detailsProduct == null)
+                return NotFound();
+
+            return View(detailsProduct);
+        }
 
     }
 

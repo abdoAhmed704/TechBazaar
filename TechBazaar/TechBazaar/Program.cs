@@ -5,7 +5,7 @@ using TechBazaar.Core.Models;
 using TechBazaar.Ef;
 using TechBazaar.Core.Interfaces;
 
-var builder = WebApplication.CreateBuilder(args);
+ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 

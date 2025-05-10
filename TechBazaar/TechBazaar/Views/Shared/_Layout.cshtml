@@ -35,7 +35,7 @@
                     </ul>
                     <ul class="navbar-nav flex-grow-3 me-0">
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="WishList" asp-action="GetUserWishList">
+                            <a class="nav-link" asp-controller="WishList" asp-action="Index">
                                 <span id="wishListCount">0</span>
                                 <i class="bi bi-bag-heart-fill"></i>
                             </a>
@@ -104,7 +104,19 @@
                error: function(xhr, status, error) {
                }
            });
-        }
+        }        
+        // loadWishListCount();
+        // async function loadWishListCount(){
+        //    $.ajax({
+        //        url: 'WishList/GetTotalItemInWishList',
+        //        type: 'GET',
+        //        success: function(response) {
+        //             $("#WishListCount").text(response);
+        //        },
+        //        error: function(xhr, status, error) {
+        //        }
+        //    });
+        // }
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
