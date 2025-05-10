@@ -9,5 +9,6 @@ namespace TechBazaar.Core.Interfaces
 {
     public interface IWishListRepository<T> : IBaseRepository<T> where T : WishList
     {
+        Task<IEnumerable<int>> GetWishListProductIds();
     }
 }

@@ -13,7 +13,7 @@ namespace TechBazaar.Core.Interfaces
         public IBrandRepository<Brand> Brand { get; }
         public ICartRepository<Cart> Cart { get; }
         public ICheckoutRepository Checkout { get;}
-        //public ICartRepository<WishList> WishList { get; }
+        public IWishListRepository<WishList> WishList{ get; }
         void SaveChanges();
         Task SaveChangesAsync();
 

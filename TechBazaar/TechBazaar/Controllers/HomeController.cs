@@ -19,10 +19,12 @@ namespace TechBazaar.Controllers
             IEnumerable<Product> products = await unitOfWork.Product.DisplayProducts(sTerm, categoryId, brandId);
             IEnumerable<Category> categories = await unitOfWork.Category.DisplayCategories();
             IEnumerable<Brand> brands = await unitOfWork.Brand.DisplayBrands();
+            IEnumerable<int> wishListProductIds = await unitOfWork.WishList.GetWishListProductIds();
 
             var model = new ProductDisplayModelView
             {
                 Products = products,
+                WishListProductIds = wishListProductIds,
                 Categories = categories,
                 Brands = brands,
                 STerm = sTerm,

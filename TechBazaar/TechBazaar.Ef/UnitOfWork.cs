@@ -38,7 +38,7 @@ namespace TechBazaar.Ef
             Inventory = new BaseRepository<Inventory>(eContext);
             Image = new BaseRepository<Image>(eContext);
             Brand = new BrandRepository<Brand>(eContext);
-            WishList = new WishListRepository<WishList>(eContext);
+            WishList = new WishListRepository<WishList>(eContext, httpContextAccessor, userManager);
             Cart = new CartRepository<Cart>(eContext, httpContextAccessor, userManager);
             Checkout = new CheckoutRepository(eContext);
 

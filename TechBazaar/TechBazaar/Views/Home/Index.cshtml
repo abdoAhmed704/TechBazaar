@@ -62,11 +62,13 @@
                     <br />
                     <b>Price: </b>@product.Price
                 </p>
-                <a asp-controller="WishList" asp-action="Index" type="button" onclick="add(@product.Id)" class="btn btn-primary"><i class="bi bi-heart-fill"></i></a>
+                <a asp-controller="WishList" asp-action="Index" type="button" onclick="addToWishList(@product.Id)" class="btn btn-primary">
+                    <i class="bi @(Model.WishListProductIds.Contains(product.Id) ? "bi-heart" : "bi-heart-fill")"></i>
+                    </a>
                 <a asp-controller="Product" asp-action="DisplayProduct" asp-route-id = "@product.Id" class="btn btn-primary">Details</a>
                 @if (product.Inventory.Quantity > 0)
                 {
-                    <button type="button" onclick="add(@product.Id)" class="btn btn-primary">Add to cart</button>
+                    <button type="button" onclick="addToCart(@product.Id)" class="btn btn-primary">Add to cart</button>
                 }
                 else
                 {
@@ -79,7 +81,7 @@
 
 @section Scripts{
     <script>
-        async function add(productId) {
+        async function addToCart(productId) {
              var username = document.getElementById("username");
         if(username == null){
             window.location.href = "/Account/Login";
@@ -98,8 +100,8 @@
              alert("not enough stock");
             }
         });
-        }        
-        async function add(productId) {
+        }
+        async function addToWishList(productId) {
              var username = document.getElementById("username");
         if(username == null){
             window.location.href = "/Account/Login";
