@@ -23,6 +23,7 @@ namespace TechBazaar.Ef
         public IBrandRepository<Brand> Brand { get; private set; }
         public IWishListRepository<WishList> WishList { get; private set; }
         public ICartRepository<Cart> Cart { get; private set; }
+        public ICheckoutRepository Checkout { get; private set; }
 
 
         public UnitOfWork(EContext eContext, IHttpContextAccessor httpContextAccessor,UserManager<ApplicationUser> userManager)
@@ -39,6 +40,7 @@ namespace TechBazaar.Ef
             Brand = new BrandRepository<Brand>(eContext);
             WishList = new WishListRepository<WishList>(eContext);
             Cart = new CartRepository<Cart>(eContext, httpContextAccessor, userManager);
+            Checkout = new CheckoutRepository(eContext);
 
         }
 

@@ -24,6 +24,10 @@ namespace TechBazaar.Ef.Repository
             this.httpContextAccessor = httpContextAccessor;
             this.userManager = userManager;
         }
+        public Cart GetCartById(int cartId)
+        {
+            return eContext.Carts.Include(c => c.CartItems).Include(c => c.ApplicationUser).FirstOrDefault(c => c.Id == cartId);
+        }
         public async Task<int> GetTotalItemInCart()
         {
             var userId = GetUserId();
@@ -52,7 +56,7 @@ namespace TechBazaar.Ef.Repository
                 {
                     if (discount.Type == DicscountType.Percentage)
                     {
-                        productPrice -= productPrice * ((discount.Value / 100)* 100);
+                        productPrice -= ((discount.Value / productPrice) * 100);
                     }
                     else if (discount.Type == DicscountType.Fixed)
                     {
@@ -74,6 +78,7 @@ namespace TechBazaar.Ef.Repository
                     IsActive = true
                 };
                 newCart.CartItems.Add(new CartItem { ProductId = productId, Quantity = quantity,Price = product.Price,PriceAfterDiscount = productPrice });
+                newCart.Total = newCart.TotalPrice();
                 eContext.Carts.Add(newCart);
             }
             else
@@ -90,6 +95,8 @@ namespace TechBazaar.Ef.Repository
                 {
                     cart.CartItems.Add(new CartItem { ProductId = productId, Quantity = quantity ,Price = product.Price,PriceAfterDiscount = productPrice});
                 }
+                cart.Total = cart.TotalPrice();
+
             }
             await eContext.SaveChangesAsync();
             return true;
@@ -106,11 +113,13 @@ namespace TechBazaar.Ef.Repository
                 {
                     cartItem.Quantity -=1;
                     eContext.CartItems.Update(cartItem);
+                    cart.Total = cart.TotalPrice();
                     await eContext.SaveChangesAsync();
                 }
                 else
                 {
                     cart.CartItems.Remove(cartItem);
+                    cart.Total = cart.TotalPrice();
                     await eContext.SaveChangesAsync();
                 }
 

@@ -40,6 +40,9 @@ namespace TechBazaar.Ef.Repository
             var products = eContext.Set<T>().AsNoTracking().Include(p => p.Category).
                 Include(p => p.Brand).Include(p =>p.Images).Include(p=>p.Inventory).
                 Where(p => p.DeletedAt == null && p.IsActive == true);
+
+
+
             if (!string.IsNullOrEmpty(sTearm))
             {
                 products = products.Where(p => p.Name.Contains(sTearm));

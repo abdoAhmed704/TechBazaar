@@ -58,6 +58,38 @@ namespace TechBazaar.Ef
 
                 };
 
+                if (!context.PaymentMethods.Any())
+                {
+                    var pymentMethods = new List<PaymentMethod>
+                {
+                    new PaymentMethod
+                    {
+                        Name = "Visa",
+                        CreatedAt = DateTime.UtcNow,
+                        IsActive = true,
+                        Comission = "2.5%"
+                    },
+                    new PaymentMethod
+                    {
+                        Name = "MasterCard",
+                        CreatedAt = DateTime.UtcNow,
+                        IsActive = true,
+                        Comission = "2.5%"
+                        
+                    },
+                    new PaymentMethod
+                    {
+                        Name = "PayPal",
+                        CreatedAt = DateTime.UtcNow,
+                        IsActive = true,
+                        Comission = "3.5%"
+                    }
+                };
+                    context.PaymentMethods.AddRange(pymentMethods);
+                    context.SaveChanges();
+                }
+                
+
                 var userInDb = await usermanage.FindByEmailAsync(Admin.Email);
 
                 if (userInDb is null)

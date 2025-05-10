@@ -4,57 +4,60 @@ using Microsoft.AspNetCore.Identity;
 using TechBazaar.Core.Models;
 using TechBazaar.Core.ViewModels;
 using TechBazaar.Core.Enums;
+using TechBazaar.Core.Interfaces;
 
 namespace TechBazaar.Controllers
 {
     public class CheckoutController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUnitOfWork unitOfWork;
 
-        public CheckoutController(UserManager<ApplicationUser> userManager)
+        public CheckoutController(IUnitOfWork unitOfWork)
         {
-            _userManager = userManager;
+            this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int cartId)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var cart = unitOfWork.Cart.GetCartById(cartId);
+            if (cart == null) return NotFound();
 
-            if (user == null) return RedirectToAction("Login", "Account");
+            var user = cart.ApplicationUser;
 
             var viewModel = new CheckoutViewModel
             {
-                FullName = $"{user.FirstName} {user.LastName}",
-                Email = user.Email,
-                Street = user.Street,
-                BuildingNo = user.BuldingNo,
-                Floor = user.Floor,
-                AppartmentNo = user.AppartmentNo,
-                City = user.City,
-                Country = user.Country,
-                PostalCode = user.PostalCode,
-                OrderTotal = user.Carts
-                    .FirstOrDefault(c => c.Status == CartStatus.Pending)?.TotalPrice() ?? 0
+                CartId = cart.Id,
+                UserFullName = $"{user.FirstName} {user.LastName}",
+                Address = $"{user.Street}, Bldg {user.BuldingNo}, Floor {user.Floor}, Apt {user.AppartmentNo}, {user.City}, {user.Country}, {user.PostalCode}",
+                TotalAmount = cart.TotalPrice(),
+                PaymentMethods = unitOfWork.Checkout.GetActivePaymentMethods()
             };
 
             return View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult ConfirmOrder(CheckoutViewModel model)
+        public IActionResult Process(CheckoutViewModel model)
         {
-            if (!ModelState.IsValid)
+            var cart = unitOfWork.Cart.GetCartById(model.CartId);
+            if (cart == null) return NotFound();
+
+            var payment = new Payment
             {
-                return View("Index", model);
-            }
+                OrderId = cart.Id,
+                PaymentMethodId = model.SelectedPaymentMethodId,
+                Amount = model.TotalAmount
+            };
 
+            unitOfWork.Checkout.AddPayment(payment);
+            unitOfWork.Checkout.UpdateCartStatus(cart, CartStatus.Paid);
+            unitOfWork.SaveChanges();
 
-            return RedirectToAction("Success");
+            return RedirectToAction("Confirmation");
         }
 
-        public IActionResult Success()
+        public IActionResult Confirmation()
         {
-            ViewBag.Message = "Thank you for your order! Your purchase has been successfully confirmed.";
             return View();
         }
     }

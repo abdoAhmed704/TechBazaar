@@ -11,6 +11,7 @@ namespace TechBazaar.Core.Enums
         Active,
         Pending ,
         Completed,
+        Paid,
         Cancelled
     }
 }

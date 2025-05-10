@@ -14,6 +14,7 @@ namespace TechBazaar.Ef
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<WishList> WishLists { get; set; }
         public DbSet<WishItem> WishItems { get; set; }
         public DbSet<Review> Reviews { get; set; }
