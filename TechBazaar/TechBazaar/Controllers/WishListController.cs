@@ -1,133 +1,115 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TechBazaar.Core.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using TechBazaar.Core.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using TechBazaar.Ef;
 
 namespace TechBazaar.Web.Controllers
 {
+    [Authorize] 
     public class WishListController : Controller
     {
         private readonly EContext _context;
-        private readonly IUnitOfWork unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public WishListController(EContext context)
+        public WishListController(EContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        // GET: WishList
+        
         public async Task<IActionResult> Index()
         {
-            var wishLists = await _context.WishLists
-                .Include(w => w.ApplicationUser)
-                .Include(w => w.WishItems)
-                .ThenInclude(wi => wi.Product)
-                .ToListAsync();
-            return View(wishLists);
-        }
-
-        // GET: WishList/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null) return NotFound();
-
+            var userId = _userManager.GetUserId(User);
             var wishList = await _context.WishLists
-                .Include(w => w.ApplicationUser)
                 .Include(w => w.WishItems)
                 .ThenInclude(wi => wi.Product)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .ThenInclude(p => p.Images)
+                .FirstOrDefaultAsync(w => w.UserId == userId && w.IsActive);
 
-            if (wishList == null) return NotFound();
-
-            return View(wishList);
-        }
-
-        // GET: WishList/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: WishList/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(WishList wishList)
-        {
-            if (ModelState.IsValid)
+            if (wishList == null)
             {
-                wishList.ModifiedAt = DateTime.Now;
-                _context.Add(wishList);
+                wishList = new WishList
+                {
+                    UserId = userId,
+                    CreatedAt = DateTime.Now,
+                    ModifiedAt = DateTime.Now
+                };
+                _context.WishLists.Add(wishList);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            return View(wishList);
-        }
-
-        // GET: WishList/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var wishList = await _context.WishLists.FindAsync(id);
-            if (wishList == null) return NotFound();
 
             return View(wishList);
         }
 
-        // POST: WishList/Edit/5
+        
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, WishList wishList)
+        public async Task<IActionResult> AddToWishList(int productId, int quantity = 1)
         {
-            if (id != wishList.Id) return NotFound();
+            var userId = _userManager.GetUserId(User);
+            var wishList = await _context.WishLists
+                .FirstOrDefaultAsync(w => w.UserId == userId && w.IsActive);
 
-            if (ModelState.IsValid)
+            if (wishList == null)
             {
-                try
+                wishList = new WishList
+                {
+                    UserId = userId,
+                    CreatedAt = DateTime.Now,
+                    ModifiedAt = DateTime.Now
+                };
+                _context.WishLists.Add(wishList);
+                await _context.SaveChangesAsync();
+            }
+
+            var existingItem = await _context.WishItems
+                .FirstOrDefaultAsync(wi => wi.WishId == wishList.Id && wi.ProductId == productId);
+
+            if (existingItem == null)
+            {
+                var wishItem = new WishItem
+                {
+                    WishId = wishList.Id,
+                    ProductId = productId,
+                    Quantity = quantity
+                };
+                _context.WishItems.Add(wishItem);
+            }
+            else
+            {
+                existingItem.Quantity += quantity;
+            }
+
+            wishList.ModifiedAt = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+        
+        [HttpPost]
+        public async Task<IActionResult> RemoveFromWishList(int wishItemId)
+        {
+            var userId = _userManager.GetUserId(User);
+            var wishItem = await _context.WishItems
+                .FirstOrDefaultAsync(wi => wi.Id == wishItemId && wi.WishList.UserId == userId);
+
+            if (wishItem != null)
+            {
+                _context.WishItems.Remove(wishItem);
+                var wishList = await _context.WishLists.FindAsync(wishItem.WishId);
+                if (wishList != null)
                 {
                     wishList.ModifiedAt = DateTime.Now;
-                    _context.Update(wishList);
-                    await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.WishLists.Any(e => e.Id == id))
-                        return NotFound();
-                    else
-                        throw;
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(wishList);
-        }
-
-        // GET: WishList/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var wishList = await _context.WishLists
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (wishList == null) return NotFound();
-
-            return View(wishList);
-        }
-
-        // POST: WishList/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var wishList = await _context.WishLists.FindAsync(id);
-            if (wishList != null)
-            {
-                _context.WishLists.Remove(wishList);
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
     }
 }

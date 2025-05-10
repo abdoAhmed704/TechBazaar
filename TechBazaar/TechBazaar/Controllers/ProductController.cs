@@ -302,14 +302,37 @@ namespace TechBazaar.Controllers
         }
         public async Task<IActionResult> DisplayProduct(int id)
         {
-            var detailsProduct = await unitOfWork.Product
-                .FirstOrDefaultAsync(p => p.Id == id);
 
-            if (detailsProduct == null)
+            var productEntity = await unitOfWork.Product
+                .Include(p => p.Category)
+                .Include(p => p.Brand)
+                .Include(p => p.Images)
+                .Include(p => p.Inventory)
+                .FirstOrDefaultAsync(p => p.Id == id);
+               
+
+
+            if (productEntity == null)
                 return NotFound();
 
-            return View(detailsProduct);
+            var viewModel = new ProductDetailsModelView
+            {
+                Id = productEntity.Id,
+                Name = productEntity.Name,
+                ShortDescription = productEntity.ShortDescription,
+                Description = productEntity.Description,
+                Price = productEntity.Price,
+                CategoryId = productEntity.CategoryId,
+                CategoryName = productEntity.Category?.Name, 
+                BrandId = productEntity.BrandId,
+                BrandName = productEntity.Brand?.Name,
+                Quantity = productEntity.Inventory?.Quantity ?? 0,
+                Images = productEntity.Images?.Select(img => img.ImageUrl).ToList() ?? new List<string>()
+            };
+
+            return View(viewModel); 
         }
+
 
     }
 

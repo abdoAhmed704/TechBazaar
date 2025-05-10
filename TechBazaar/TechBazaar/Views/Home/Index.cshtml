@@ -62,8 +62,8 @@
                     <br />
                     <b>Price: </b>@product.Price
                 </p>
-                <button type="button" onclick="add(@product.Id)" class="btn btn-primary"><i class="bi bi-heart-fill"></i></button>
-                <a asp-controller="Product" asp-action="DisplayProduct" class="btn btn-primary">Details</a>>
+                <a asp-controller="WishList" asp-action="Index" type="button" onclick="add(@product.Id)" class="btn btn-primary"><i class="bi bi-heart-fill"></i></a>
+                <a asp-controller="Product" asp-action="DisplayProduct" asp-route-id = "@product.Id" class="btn btn-primary">Details</a>
                 @if (product.Inventory.Quantity > 0)
                 {
                     <button type="button" onclick="add(@product.Id)" class="btn btn-primary">Add to cart</button>
@@ -86,6 +86,26 @@
         }
         $.ajax({
             url: '/cart/addtocart',
+            type: 'POST',
+            data: {
+                productId: `${productId}`,
+                quantity: 1
+            },
+            success: function() {
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+             alert("not enough stock");
+            }
+        });
+        }        
+        async function add(productId) {
+             var username = document.getElementById("username");
+        if(username == null){
+            window.location.href = "/Account/Login";
+        }
+        $.ajax({
+            url: '/Wishlist/AddToWishList',
             type: 'POST',
             data: {
                 productId: `${productId}`,
