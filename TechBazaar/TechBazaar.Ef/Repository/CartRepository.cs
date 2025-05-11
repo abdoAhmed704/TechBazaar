@@ -77,6 +77,7 @@ namespace TechBazaar.Ef.Repository
             var userId = GetUserId();
             var carts = await eContext.Carts
                 .Where(c => c.UserId == userId && c.Status != CartStatus.Active)
+                .OrderBy(c => c.CreatedAt)
                 .ToListAsync();
             return carts;
         }

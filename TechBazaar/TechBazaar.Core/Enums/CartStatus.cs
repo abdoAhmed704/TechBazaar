@@ -10,8 +10,9 @@ namespace TechBazaar.Core.Enums
     {
         Active,
         Pending ,
-        Completed,
         Paid,
+        shipped,
+        Completed,
         Cancelled
     }
 }
