@@ -18,5 +18,6 @@ namespace TechBazaar.Core.Interfaces
         Task RemoveFromCart(int productId);
         Task<T> GetUserCart();
         Task<T> GetCart(string userId);
+        Task<IEnumerable<T>> GetOrderReport(DateTime from, DateTime to);
     }
 }

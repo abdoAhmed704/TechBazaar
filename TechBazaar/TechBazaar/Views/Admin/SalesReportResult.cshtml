@@ -1,0 +1,20 @@
+﻿@model SalesReportModelView
+
+<h2>Sales Report</h2>
+
+<p>From: @Model.From.ToString("d") - To: @Model.To.ToString("d")</p>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Total Orders</th>
+        <td>@Model.TotalOrders</td>
+    </tr>
+    <tr>
+        <th>Total Sales</th>
+        <td>@Model.TotalSales.ToString("C")</td>
+    </tr>
+    <tr>
+        <th>Average Order Value</th>
+        <td>@Model.AverageOrderValue.ToString("C")</td>
+    </tr>
+</table>

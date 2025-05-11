@@ -93,7 +93,11 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
-        loadCartCount();
+        $(document).ready(function(){
+            loadWishListCount();
+            loadCartCount();
+        });
+        
         async function loadCartCount(){
            $.ajax({
                url: 'Cart/GetTotalItemInCart',
@@ -105,13 +109,12 @@
                }
            });
         }        
-        loadWishListCount();
         async function loadWishListCount(){
            $.ajax({
                url: 'WishList/GetTotalItemInWishList',
                type: 'GET',
                success: function(response) {
-                    $("#WishListCount").text(response);
+                    $("#wishListCount").text(response);
                },
                error: function(xhr, status, error) {
                }
