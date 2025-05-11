@@ -34,5 +34,10 @@ namespace TechBazaar.Controllers
 
             return View(model);
         }
+        public async Task<IActionResult> Orders()
+        {
+            var orders = await unitOfWork.Cart.GetCustomerOrdersAsync();
+            return View(orders);
+        }
     }
 }

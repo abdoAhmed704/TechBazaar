@@ -36,7 +36,6 @@
 <table class="table table-striped table-hover">
     <thead>
         <tr>
-            <th>Ref Number</th>
             <th>User</th>
             <th>Total</th>
             <th>Status</th>
@@ -50,7 +49,6 @@
             @foreach (var order in Model.Orders)
             {
                 <tr>
-                    <td>@order.RefNumber</td>
                     <td>@order.ApplicationUser?.FirstName @order.ApplicationUser?.LastName</td>
                     <td>@order.Total</td>
                     <td>@order.Status</td>

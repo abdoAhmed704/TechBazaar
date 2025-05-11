@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -70,6 +71,14 @@ namespace TechBazaar.Ef.Repository
             var cart = await eContext.Set<T>().Include(c => c.CartItems).FirstOrDefaultAsync(c => c.UserId == userId && c.Status == CartStatus.Active && c.IsActive);
             var cartItemsCount = cart?.CartItems.Count();
             return cartItemsCount ?? 0;
+        }
+        public async Task<IEnumerable<Cart>> GetCustomerOrdersAsync()
+        {
+            var userId = GetUserId();
+            var carts = await eContext.Carts
+                .Where(c => c.UserId == userId && c.Status != CartStatus.Active)
+                .ToListAsync();
+            return carts;
         }
 
         public async Task<bool> AddToCart(int productId,int quantity)
