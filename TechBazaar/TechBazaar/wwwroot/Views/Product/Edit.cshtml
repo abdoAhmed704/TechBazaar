@@ -1,0 +1,101 @@
+﻿@model ProductCreateViewModel
+
+@{
+    Layout = "_Dashboard";
+}
+
+<h2>Edit Product</h2>
+
+<form asp-action="Edit" enctype="multipart/form-data">
+    <input type="hidden" asp-for="CategoryId" /> 
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ShortDescription"></label>
+        <textarea asp-for="ShortDescription" class="form-control"></textarea>
+        <span asp-validation-for="ShortDescription" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DiscountIds">Discount</label>
+        <select asp-for="DiscountIds" asp-items="Model.Discounts" class="form-control" multiple="multiple">
+            <option value="">Select a discount</option>
+        </select>
+        <span asp-validation-for="DiscountIds" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CategoryId">Category</label>
+        <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control">
+            <option value="">Select a category</option>
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BrandId">Category</label>
+        <select asp-for="BrandId" asp-items="Model.Brands" class="form-control">
+            <option value="">Select a category</option>
+        </select>
+        <span asp-validation-for="BrandId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IsActive"></label>
+        <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+        <span asp-validation-for="IsActive" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Current Images</label>
+        <div>
+            @if (Model.ExistingImages.Any())
+            {
+                foreach (var image in Model.ExistingImages)
+                {
+                    <div>
+                        <img src="@image.ImageUrl" alt="Product Image" style="max-width: 200px; margin: 5px;" />
+                        <div>
+                            <input type="checkbox" name="ImagesToDelete" value="@image.Id" />
+                            <label>Delete</label>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No images uploaded yet.</p>
+            }
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Add New Images</label>
+        <input type="file" name="ImageFiles" multiple class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,47 @@
+﻿@model TechBazaar.Core.ViewModels.CheckoutViewModel 
+
+<h2>Checkout</h2>
+
+<form asp-action="ConfirmOrder" method="post">
+    <div>
+        <label asp-for="FullName"></label>
+        <input asp-for="FullName" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="Street"></label>
+        <input asp-for="Street" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="BuildingNo"></label>
+        <input asp-for="BuildingNo" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="Floor"></label>
+        <input asp-for="Floor" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="AppartmentNo"></label>
+        <input asp-for="AppartmentNo" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="City"></label>
+        <input asp-for="City" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="Country"></label>
+        <input asp-for="Country" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="PostalCode"></label>
+        <input asp-for="PostalCode" class="form-control" />
+    </div>
+    @* <div> *@
+    @*     <strong>Total:</strong>@(Model.CartItems.Select(item => item.PriceAfterDiscount * item.Quantity).Sum()) *@
+    @* </div> *@
+    <button type="submit" asp-controller="CheckOut" asp-action="Success">Confirm Order</button>
+</form>
+
