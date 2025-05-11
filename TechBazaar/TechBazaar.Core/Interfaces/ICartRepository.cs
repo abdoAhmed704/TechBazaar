@@ -14,5 +14,6 @@ namespace TechBazaar.Core.Interfaces
         Task RemoveFromCart(int productId);
         Task<T> GetUserCart();
         Task<T> GetCart(string userId);
+        Task GetTotalItemInWishList();
     }
 }

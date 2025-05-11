@@ -22,5 +22,6 @@ namespace TechBazaar.Core.Models
         // Navigation properties
         public ApplicationUser? ApplicationUser { get; set; }
         public ICollection<WishItem> WishItems { get; set; } = new List<WishItem>();
+
     }
 }

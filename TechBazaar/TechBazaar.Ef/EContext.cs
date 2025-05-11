@@ -20,6 +20,7 @@ namespace TechBazaar.Ef
 
         public EContext(DbContextOptions<EContext> options):base(options)
         {
+
            
         }
     }
