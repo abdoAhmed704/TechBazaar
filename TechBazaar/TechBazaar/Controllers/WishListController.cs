@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using TechBazaar.Ef;
+using TechBazaar.Core.Interfaces;
 
 namespace TechBazaar.Web.Controllers
 {
@@ -14,11 +15,13 @@ namespace TechBazaar.Web.Controllers
     {
         private readonly EContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUnitOfWork unitOfWork;
 
-        public WishListController(EContext context, UserManager<ApplicationUser> userManager)
+        public WishListController(EContext context, UserManager<ApplicationUser> userManager,IUnitOfWork unitOfWork)
         {
             _context = context;
             _userManager = userManager;
+            this.unitOfWork = unitOfWork;
         }
 
         
@@ -110,6 +113,11 @@ namespace TechBazaar.Web.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+        public async Task<IActionResult> GetTotalItemInWishList()
+        {
+            int wishListItemCount = await unitOfWork.WishList.GetTotalItemInWishList();
+            return Ok(wishListItemCount);
         }
     }
 }

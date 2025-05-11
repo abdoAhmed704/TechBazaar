@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TechBazaar.Core.Enums;
 using TechBazaar.Core.Interfaces;
 using TechBazaar.Core.Models;
 
@@ -33,6 +34,14 @@ namespace TechBazaar.Ef.Repository
                        .ToListAsync();
             return wishListProductIds;
         }
+
+        public async Task<int> GetTotalItemInWishList()
+        {
+            var userId = GetUserId();
+            var wishList = await eContext.WishLists.Include(c => c.WishItems).FirstOrDefaultAsync(c => c.UserId == userId && c.IsActive);
+            var wishListCount = wishList?.WishItems.Count();
+            return wishListCount ?? 0;
+        }
         private string GetUserId()
         {
             var user = httpContextAccessor.HttpContext?.User;
@@ -40,7 +49,7 @@ namespace TechBazaar.Ef.Repository
 
             if (userId == null)
             {
-                throw new Exception("User not found");
+                return "";
             }
             return userId;
         }

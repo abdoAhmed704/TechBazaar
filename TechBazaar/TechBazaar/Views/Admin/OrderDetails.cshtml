@@ -1,0 +1,30 @@
+﻿@model TechBazaar.Core.Models.Cart
+
+@{
+    Layout = "_Dashboard";
+}
+
+<h2>Order Details - @Model.RefNumber</h2>
+
+<p>User: @Model.ApplicationUser?.FirstName @Model.ApplicationUser?.LastName</p>
+<p>Total: @Model.Total</p>
+<p>Status: @Model.Status</p>
+
+<form asp-action="UpdateOrderStatus" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <select name="status" class="form-control">
+        @foreach (var status in Enum.GetValues(typeof(TechBazaar.Core.Enums.CartStatus)))
+        {
+            if (status.ToString() == Model.Status.ToString())
+            {
+                <option value="@status" selected>@status</option>
+            }
+            else
+            {
+                <option value="@status">@status</option>
+            }
+        }
+    </select>
+    <br />
+    <button type="submit" class="btn btn-primary">Update Status</button>
+</form>

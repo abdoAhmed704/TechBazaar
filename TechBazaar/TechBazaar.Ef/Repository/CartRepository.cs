@@ -28,6 +28,42 @@ namespace TechBazaar.Ef.Repository
         {
             return eContext.Carts.Include(c => c.CartItems).Include(c => c.ApplicationUser).FirstOrDefault(c => c.Id == cartId);
         }
+
+        public IEnumerable<Cart> GetCarts(CartStatus? status = null, DateTime? from = null, DateTime? to = null)
+        {
+            var query = eContext.Carts
+                .Include(c => c.CartItems)
+                .Include(c => c.ApplicationUser)
+                .AsQueryable();
+
+            if (status.HasValue)
+            {
+                query = query.Where(c => c.Status == status.Value);
+            }
+
+            if (from.HasValue)
+            {
+                query = query.Where(c => c.CreatedAt >= from.Value);
+            }
+
+            if (to.HasValue)
+            {
+                query = query.Where(c => c.CreatedAt <= to.Value);
+            }
+
+            return query.OrderByDescending(c => c.CreatedAt).ToList();
+        }
+
+        public void UpdateCartStatus(int cartId, CartStatus status)
+        {
+            var cart = eContext.Carts.Find(cartId);
+            if (cart != null)
+            {
+                cart.Status = status;
+                cart.ModifiedAt = DateTime.UtcNow;
+                eContext.Update(cart);
+            }
+        }
         public async Task<int> GetTotalItemInCart()
         {
             var userId = GetUserId();
@@ -35,6 +71,7 @@ namespace TechBazaar.Ef.Repository
             var cartItemsCount = cart?.CartItems.Count();
             return cartItemsCount ?? 0;
         }
+
         public async Task<bool> AddToCart(int productId,int quantity)
         {
             var userId = GetUserId();
@@ -158,9 +195,5 @@ namespace TechBazaar.Ef.Repository
             return userId;
         }
 
-        public Task GetTotalItemInWishList()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
