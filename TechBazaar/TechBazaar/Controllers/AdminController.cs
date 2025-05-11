@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TechBazaar.Core.Enums;
 using TechBazaar.Core.Interfaces;
@@ -7,6 +8,7 @@ using TechBazaar.Ef.Repository;
 
 namespace TechBazaar.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
