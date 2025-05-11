@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
 using TechBazaar.Core.Enums;
 using TechBazaar.Core.Interfaces;
+using TechBazaar.Core.Models;
 using TechBazaar.Core.ModelViews;
 using TechBazaar.Ef.Repository;
 
 namespace TechBazaar.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
@@ -57,6 +61,7 @@ namespace TechBazaar.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult UpdateOrderStatus(int id, CartStatus status)
         {
             var cart = unitOfWork.Cart.GetCartById(id);
@@ -67,6 +72,34 @@ namespace TechBazaar.Controllers
             unitOfWork.SaveChanges();
 
             return RedirectToAction("Orders");
+        }
+
+        public IActionResult SalesReport()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SalesReport(DateTime from, DateTime to)
+        {
+            var orders = await unitOfWork.Cart.GetOrderReport(from, to);
+
+            var totalSales = orders.Sum(c => c.TotalPrice());
+            var totalOrders = orders.Count();
+            var averageOrderValue = totalOrders > 0 ? totalSales / totalOrders : 0;
+
+            var report = new SalesReportModelView
+            {
+                From = from,
+                To = to,
+                TotalSales = totalSales,
+                TotalOrders = totalOrders,
+                AverageOrderValue = averageOrderValue
+            };
+
+
+            return View("SalesReportResult", report);
         }
     }
 }

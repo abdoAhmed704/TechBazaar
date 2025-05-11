@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -41,11 +42,13 @@ namespace TechBazaar.Controllers
             return View(category);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View(new CategoryModelView());
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryModelView category)
@@ -85,6 +88,8 @@ namespace TechBazaar.Controllers
             
         }
 
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Edit(int id)
         {
             var category = await unitOfWork.Category.GetCategoryByIdAsync(id);
@@ -103,7 +108,7 @@ namespace TechBazaar.Controllers
             return View(categoryModelView);
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CategoryModelView category)
@@ -153,6 +158,7 @@ namespace TechBazaar.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var category = await unitOfWork.Category
@@ -165,6 +171,7 @@ namespace TechBazaar.Controllers
             return View(category);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

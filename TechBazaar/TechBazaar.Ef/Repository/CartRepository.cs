@@ -192,6 +192,15 @@ namespace TechBazaar.Ef.Repository
             return cart;
         }
 
+        public async Task<IEnumerable<T>> GetOrderReport(DateTime from,DateTime to)
+        {
+            var orders = await eContext.Set<T>()
+                   .Include(c => c.ApplicationUser)
+                   .Include(c => c.CartItems)
+                   .Where(c => c.CreatedAt >= from && c.CreatedAt <= to && c.Status == CartStatus.Completed)
+                   .ToListAsync();
+            return orders;
+        }
         private string GetUserId()
         {
             var user = httpContextAccessor.HttpContext?.User;
