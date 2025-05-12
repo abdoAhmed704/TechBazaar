@@ -1,0 +1,21 @@
+﻿@model TechBazaar.Core.ViewModels.CheckoutViewModel
+
+<h2>Checkout</h2>
+
+<div>
+    <p><strong>Name:</strong> @Model.UserFullName</p>
+    <p><strong>Address:</strong> @Model.Address</p>
+    <p><strong>Total:</strong> @Model.TotalAmount.ToString("C")</p>
+</div>
+
+<form asp-action="Process" method="post">
+    <input type="hidden" asp-for="CartId" />
+
+    <div>
+        <label>Select Payment Method:</label>
+        <select asp-for="SelectedPaymentMethodId" asp-items="@(new SelectList(Model.PaymentMethods, "Id", "Name"))" class="form-control"></select>
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-primary">Confirm Payment</button>
+</form>
