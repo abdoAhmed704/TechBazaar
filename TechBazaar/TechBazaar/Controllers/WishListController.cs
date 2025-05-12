@@ -74,23 +74,24 @@ namespace TechBazaar.Web.Controllers
 
             if (existingItem == null)
             {
+                // Add to wishlist if not exists
                 var wishItem = new WishItem
                 {
                     WishId = wishList.Id,
                     ProductId = productId,
-                    Quantity = quantity
                 };
                 _context.WishItems.Add(wishItem);
             }
             else
             {
-                existingItem.Quantity += quantity;
+                // Remove from wishlist if exists
+                _context.WishItems.Remove(existingItem);
             }
 
             wishList.ModifiedAt = DateTime.Now;
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return NoContent();
         }
 
         

@@ -309,7 +309,9 @@ namespace TechBazaar.Controllers
                 .Include(p => p.Images)
                 .Include(p => p.Inventory)
                 .FirstOrDefaultAsync(p => p.Id == id);
-               
+            IEnumerable<int> wishListProductIds = await unitOfWork.WishList.GetWishListProductIds();
+
+
 
 
             if (productEntity == null)
@@ -327,6 +329,7 @@ namespace TechBazaar.Controllers
                 BrandId = productEntity.BrandId,
                 BrandName = productEntity.Brand?.Name,
                 Quantity = productEntity.Inventory?.Quantity ?? 0,
+                WishListProductIds = wishListProductIds,
                 Images = productEntity.Images?.Select(img => img.ImageUrl).ToList() ?? new List<string>()
             };
 

@@ -51,10 +51,9 @@
     <!-- Sidebar -->
     <div class="sidebar d-flex flex-column p-3">
         <h4 class="text-white mb-4">🛒 TechBazaar</h4>
-        <a asp-controller="Admin" class="active"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a>
+        <a href="/dashboard" class="active"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a>
         <a asp-controller="Product" asp-action="Index"><i class="bi bi-box-seam me-2"></i> Products</a>
         <a asp-controller="Admin" asp-action="Orders"><i class="bi bi-cart-check me-2"></i> Orders</a>
-        <a asp-controller="Admin" asp-action="SalesReport"><i class="bi bi-cart-check me-2"></i> Report</a>
         <a asp-controller="Category" asp-action="Index"><i class="bi bi-people me-2"></i> Categories</a>
         <a asp-controller="Brand" asp-action="Index"><i class="bi bi-people me-2"></i> Brands</a>
         <a asp-controller="Discount" asp-action="Index"><i class="bi bi-people me-2"></i> Discounts</a>
@@ -70,17 +69,17 @@
         <!-- Top Navbar -->
         <div class="navbar d-flex justify-content-between align-items-center">
             <h5>@ViewBag.Title</h5>
-            <div class="dropdown">
-                <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="bi bi-person-circle me-2 fs-5"></i> Admin
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                    <li><a class="dropdown-item" href="#">Settings</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="/logout">Sign out</a></li>
-                </ul>
-            </div>
+            @* <div class="dropdown"> *@
+            @*     <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"> *@
+            @*         <i class="bi bi-person-circle me-2 fs-5"></i> Admin *@
+            @*     </a> *@
+            @*     <ul class="dropdown-menu dropdown-menu-end"> *@
+            @*         <li><a class="dropdown-item" href="#">Profile</a></li> *@
+            @*         <li><a class="dropdown-item" href="#">Settings</a></li> *@
+            @*         <li><hr class="dropdown-divider"></li> *@
+            @*         <li><a class="dropdown-item" href="/logout">Sign out</a></li> *@
+            @*     </ul> *@
+            @* </div> *@
         </div>
 
         <!-- Page Content -->

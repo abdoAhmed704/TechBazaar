@@ -1,125 +1,115 @@
-﻿@model ProductDisplayModelView;
+﻿@model ProductDisplayModelView
 
 @{
     ViewData["Title"] = "Home Page";
 }
+<style>
+    .action-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
 
-<div class="my-2">
-    <form asp-action="Index" class="row row-cols-lg-auto g-3 align-items-center">
-        <div class="col-12">
-            <label class="visually-hidden" for="genreId">Genres</label>
-            <select class="form-select" id="genreId" name="genreId">
-                <option selected>Category</option>
+    .details-btn {
+        width: auto;
+        min-width: 90px;
+        height: 60px;
+        font-size: 1rem;
+        padding: 0 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<div class="my-4">
+    <form asp-action="Index" class="row g-3 align-items-center">
+        <div class="col-md-3">
+            <select class="form-select" name="categoryId" title="Filter by Category">
+                <option selected disabled>Category</option>
                 @foreach (var category in Model.Categories)
                 {
-                    <option selected="@(category.Id == Model.CategoryId)" value="@category.Id">@category.Name</option>
+                    <option value="@category.Id" selected="@(category.Id == Model.CategoryId)">
+                        @category.Name
+                    </option>
                 }
             </select>
         </div>
-        <div class="col-12">
-            <label class="visually-hidden" for="genreId">Genres</label>
-            <select class="form-select" id="genreId" name="genreId">
-                <option selected>Brand</option>
+
+        <div class="col-md-3">
+            <select class="form-select" name="brandId" title="Filter by Brand">
+                <option selected disabled>Brand</option>
                 @foreach (var brand in Model.Brands)
                 {
-                    <option selected="@(brand.Id == Model.BrandId)" value="@brand.Id">@brand.Name</option>
+                    <option value="@brand.Id" selected="@(brand.Id == Model.BrandId)">
+                        @brand.Name
+                    </option>
                 }
             </select>
         </div>
 
-        <div class="col-12">
-            <label class="visually-hidden" for="sterm">Search by title</label>
-            <div class="input-group">
-                <div class="input-group-text"></div>
-                <input class="form-control" asp-for="STerm">
-            </div>
+        <div class="col-md-4">
+            <input class="form-control" asp-for="STerm" placeholder="Search by title..." />
         </div>
 
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Search</button>
-            <a href="/Home/Index" class="btn btn-dark">Reset</a>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-search"></i> Search
+            </button>
+            <a href="/Home/Index" class="btn btn-secondary" title="Clear filters">
+                Reset
+            </a>
         </div>
     </form>
 </div>
 
-<div class="w-100 mt-4 d-flex flex-wrap ">
+<div class="row mt-4">
     @foreach (var product in Model.Products)
     {
-        <div class="card mx-3 mb-4 col-4" style="width: 13rem;">
-            @if (string.IsNullOrEmpty(product.Images.First().ImageUrl))
-            {
-                <img style="width:100%;height:180px" src="/images/NoImage.png" class="card-img-top" alt="...">
+        <div class="col-md-4 col-lg-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="@(!string.IsNullOrEmpty(product.Images.FirstOrDefault()?.ImageUrl) ? product.Images.First().ImageUrl : "/images/NoImage.png")"
+                     class="card-img-top" style="height: 180px; object-fit: cover;" alt="@product.Name" />
 
-            }
-            else
-            {
-                <img style="width:100%;height:180px" src="@product.Images.First().ImageUrl" class="card-img-top" alt="...">
-            }
-            <div class="card-body">
-                <h5 class="card-title">@product.Name</h5>
-                <p class="card-text">
-                    @product.ShortDescription 
-                    <br />
-                    <b>Price: </b>@product.Price
-                </p>
-                <a asp-controller="WishList" asp-action="Index" type="button" onclick="addToWishList(@product.Id)" class="btn btn-primary">
-                    <i class="bi @(Model.WishListProductIds.Contains(product.Id) ? "bi-heart" : "bi-heart-fill")"></i>
-                    </a>
-                <a asp-controller="Product" asp-action="DisplayProduct" asp-route-id = "@product.Id" class="btn btn-primary">Details</a>
-                @if (product.Inventory.Quantity > 0)
-                {
-                    <button type="button" onclick="addToCart(@product.Id)" class="btn btn-primary">Add to cart</button>
-                }
-                else
-                {
-                    <span style="border: 1px solid;padding: 5px 8px;color: red;border-radius: 5px;">Out of stock</span>
-                }
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="card-title text-truncate">@product.Name</h5>
+                        <p class="card-text small text-muted">@product.ShortDescription</p>
+                        <p class="card-text"><strong>Price:</strong> $@product.Price</p>
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+                        <button class="btn btn-outline-danger action-btn" title="Add to Wishlist"
+                                onclick="addToWishlist(@product.Id)">
+                            <i class="bi @(Model.WishListProductIds.Contains(product.Id) ? "bi-heart-fill" : "bi-heart")"></i>
+                        </button>
+
+                        <a asp-controller="Product" asp-action="DisplayProduct" asp-route-id="@product.Id"
+                           class="btn btn-info text-white details-btn">
+                            Details
+                        </a>
+
+                        @if (product.Inventory.Quantity > 0)
+                        {
+                            <button class="btn btn-success action-btn" onclick="addToCart(@product.Id)">
+                                <i class="bi bi-cart-plus"></i>
+                            </button>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger align-self-center">Out of stock</span>
+                        }
+                    </div>
+
+                </div>
             </div>
         </div>
     }
 </div>
 
-@section Scripts{
-    <script>
-        async function addToCart(productId) {
-             var username = document.getElementById("username");
-        if(username == null){
-            window.location.href = "/Account/Login";
-        }
-        $.ajax({
-            url: '/cart/addtocart',
-            type: 'POST',
-            data: {
-                productId: `${productId}`,
-                quantity: 1
-            },
-            success: function() {
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-             alert("not enough stock");
-            }
-        });
-        }
-        async function addToWishList(productId) {
-             var username = document.getElementById("username");
-        if(username == null){
-            window.location.href = "/Account/Login";
-        }
-        $.ajax({
-            url: '/Wishlist/AddToWishList',
-            type: 'POST',
-            data: {
-                productId: `${productId}`,
-                quantity: 1
-            },
-            success: function() {
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-             alert("not enough stock");
-            }
-        });
-        }
-    </script>
+@section Scripts {
+    <script src="/js/site.js"></script>
 }

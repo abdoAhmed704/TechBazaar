@@ -4,91 +4,109 @@
     ViewData["Title"] = "Product Details";
 }
 
-<h2>@Model.Name</h2>
-
-<div>
-    <h4>Product Details</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Description</dt>
-        <dd>@Model.Description</dd>
-        <dt>Price</dt>
-        <dd>@Model.Price</dd>
-        <dt>Category</dt>
-        <dd>@Model.CategoryName</dd>
-        <dt>Brand</dt>
-        <dd>@Model.BrandName</dd>
-        <dt>Quantity</dt>
-        <dd>
-            <p>
-                <strong>Availability:</strong>
-                @if (Model.Quantity > 0)
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="row g-0">
+            <div class="col-md-6">
+                @if (Model.Images != null && Model.Images.Any())
                 {
-                    <span class="badge bg-success">In Stock (@Model.Quantity)</span>
+                    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @for (int i = 0; i < Model.Images.Count; i++)
+                            {
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+                                    <img src="@Model.Images[i]" class="d-block w-100 rounded-start" alt="Product Image" />
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
                 }
                 else
                 {
-                    <span class="badge bg-danger">Out of Stock</span>
+                    <img src="/images/placeholder.png" class="img-fluid rounded-start" alt="No Image" />
                 }
+            </div>
 
-            </p>
-        </dd>
-        <dt>Images</dt>
-        <dd>
-            @if (Model.Images != null && Model.Images.Any())
-            {
-                foreach (var image in Model.Images)
-                {
-                    <img src="@image" alt="Product Image" style="width: 100px; height: auto;" />
-                }
-            }
-            else
-            {
-                <p>No images available</p>
-            }
-        </dd>
-    </dl>
+            <div class="col-md-6">
+                <div class="card-body">
+                    <h2 class="card-title">@Model.Name</h2>
+                    <p class="card-text text-muted">@Model.Description</p>
+
+                    <h4 class="text-primary fw-bold mb-3">$@Model.Price</h4>
+
+                    <p><strong>Category:</strong> @Model.CategoryName</p>
+                    <p><strong>Brand:</strong> @Model.BrandName</p>
+                    <p>
+                        <strong>Availability:</strong>
+                        @if (Model.Quantity > 0)
+                        {
+                            <span class="badge bg-success">In Stock (@Model.Quantity)</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Out of Stock</span>
+                        }
+                    </p>
+
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary me-2">
+                            <i class="bi bi-arrow-left"></i> Back To List
+                        </a>
+
+                        <input type="hidden" name="productId" value="@Model.Id" />
+
+                    <button class="btn btn-outline-danger action-btn" title="Add to Wishlist"
+                            onclick="addToWishlist(@Model.Id)">
+                        <i class="bi @(Model.WishListProductIds.Contains(@Model.Id) ? "bi-heart-fill" : "bi-heart")"></i>
+                    </button>
+
+                        @if (Model.Quantity > 0)
+                        {
+                        <button type="button" onclick="addToCart(@Model.Id)" class="btn btn-success" id="addCartBtn">
+                            <i class="bi bi-cart-plus"></i>
+                                <span id="cartSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            </button>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Out of stock</span>
+                        }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div>
-    <form asp-controller="WishList" asp-action="AddToWishList" method="post">
-    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Back To List</a> |
-        <input type="hidden" name="productId" value="@Model.Id" />
-        <button type="submit" class="btn btn-primary">Add to Wish List</button> |
-    
-    @if (Model.Quantity > 0)
-    {
-        <button type="button" onclick="add(@Model.Id)" class="btn btn-primary">Add to cart</button>
-    }
-    else
-    {
-        <span style="border: 1px solid;padding: 5px 8px;color: red;border-radius: 5px;">Out of stock</span>
-    }
-    </form>
-    @section Scripts {
-        <script>
-            async function add(productId) {
-                 var username = document.getElementById("username");
-            if(username == null){
+@section Scripts {
+    <script>
+        async function add(productId) {
+            var username = document.getElementById("username");
+            if (!username) {
                 window.location.href = "/Account/Login";
+                return;
             }
+
+            $('#cartText').addClass('d-none');
+            $('#cartSpinner').removeClass('d-none');
+
             $.ajax({
                 url: '/cart/addtocart',
                 type: 'POST',
-                data: {
-                    productId: `${productId}`,
-                    quantity: 1
-                },
-                success: function() {
+                data: { productId, quantity: 1 },
+                success: function () {
                     location.reload();
                 },
-                error: function(xhr, status, error) {
-                 alert("not enough stock");
+                error: function () {
+                    alert("Not enough stock");
+                    $('#cartSpinner').addClass('d-none');
+                    $('#cartText').removeClass('d-none');
                 }
             });
-            }
-        </script>
-    }
-    
-</div>
-
+        }
+    <script src="/js/site.js"></script>
+}

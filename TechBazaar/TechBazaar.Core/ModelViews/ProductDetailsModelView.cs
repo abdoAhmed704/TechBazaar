@@ -28,6 +28,8 @@ namespace TechBazaar.Core.ModelViews
         public int Quantity { get; set; }
         public Product Product { get; set; }
 
+        public IEnumerable<int> WishListProductIds { get; set; } = [];
+
         public List<string> Images { get; set; } = new List<string>();
     }
 
